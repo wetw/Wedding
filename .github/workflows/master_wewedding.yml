@@ -22,8 +22,8 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_fef369645c4b4afa883cb53293102597 }}
 
     - run: |
-        docker build . -t wewedding.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_041d4c7dc8964e3aabaf4da89d3c92bd }}/wedding:${{ github.sha }}
-        docker push wewedding.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_041d4c7dc8964e3aabaf4da89d3c92bd }}/wedding:${{ github.sha }}
+        docker build . -t wewedding.azurecr.io/wedding:${{ github.sha }}
+        docker push wewedding.azurecr.io/wedding:${{ github.sha }}
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
@@ -31,4 +31,4 @@ jobs:
         app-name: 'wewedding'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_343e24ec1c7f4defbcb3d6f5daa1f808 }}
-        images: 'wewedding.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_041d4c7dc8964e3aabaf4da89d3c92bd }}/wedding:${{ github.sha }}'
+        images: 'wewedding.azurecr.io/wedding:${{ github.sha }}'
