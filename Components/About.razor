@@ -1,4 +1,4 @@
-﻿<div class="about" id="about">
+﻿<div class="about" id="@Id">
     <div class="container">
         <h3 class="title">時間地點</h3>
         <div>
@@ -53,5 +53,7 @@
 </div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; } = "about";
 
 }

@@ -1,4 +1,4 @@
-﻿<div class="contact" id="contact">
+﻿<div class="contact" id="@Id">
     <div class="container">
         <h3 class="title clr">出席回覆</h3>
         <div class="contact-two-grids">
@@ -77,5 +77,7 @@
 </div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; } = "contact";
 
 }

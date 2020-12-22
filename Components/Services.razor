@@ -1,4 +1,4 @@
-﻿<div class="services" id="services">
+﻿<div class="services" id="@Id">
     <div class="container">
         <div class="blog-two-grids">
             <h3 class="title clr">新郎&新娘</h3>
@@ -41,5 +41,7 @@
 </div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; } = "services";
 
 }

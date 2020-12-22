@@ -615,7 +615,7 @@ h6 a {
 
 .boxName {
     width: 100%;
-    font-size: 17px;
+    font-size: 23px;
     color: #000;
     font-style: italic;
     font-weight: 500;
@@ -2585,4 +2585,11 @@ footer p a:hover {
     -webkit-transition: all .5s ease;
     z-index: 1000;
     display: none;
+}
+
+.digit {
+    color: rgba(0, 0, 0, 0.47);
+    font-size: 48px;
+    bottom: 0;
+    font-family: 'Open Sans Condensed';
 }

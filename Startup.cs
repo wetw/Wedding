@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetCoreLineBotSDK;
+using Wedding.Data;
 using Wedding.Services.LineBot;
 
 namespace Wedding
@@ -21,6 +22,8 @@ namespace Wedding
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();

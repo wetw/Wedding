@@ -1,0 +1,9 @@
+﻿.digit {
+    color: rgba(0, 0, 0, 0.47);
+    font-size: 70px;
+    letter-spacing: -6px;
+    left: 3px;
+    bottom: 0;
+    position: absolute;
+    font-family: 'Open Sans Condensed';
+}

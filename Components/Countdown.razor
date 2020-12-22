@@ -1,14 +1,47 @@
-﻿
-<div class="days-coming">
+<div class="days-coming" id="@Id" >
     <div class="container">
         <h3 class="title tittle">The Wedding Day</h3>
         <div class="timer_wrap">
-            <div id="counter"></div>
+            <div id="counter" class="countdownHolder">
+                <div class="countDays">
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;">@Days</span>
+                    </span>
+                    <span class="boxName">
+                        <span class="Days">Days</span>
+                    </span>
+                </div>
+                <span class="points">:</span>
+                <span class="countDiv countDiv0"></span>
+                <div class="countHours">
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;">@Hours</span>
+                    </span>
+                    <span class="boxName">
+                        <span class="Hours">Hours</span>
+                    </span>
+                </div>
+                <span class="points">:</span>
+                <span class="countDiv countDiv1"></span>
+                <div class="countMinutes">
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;">@Minutes</span>
+                    </span>
+                    <span class="boxName">
+                        <span class="Minutes">Minutes</span>
+                    </span>
+                </div><span class="points">:</span>
+                <span class="countDiv countDiv2"></span>
+                <div class="countSeconds">
+                    <span class="position">
+                        <span class="digit static" style="top: 0px; opacity: 1;">@Seconds</span>
+                    </span>
+                    <span class="boxName">
+                        <span class="Seconds">Seconds</span>
+                    </span>
+                </div>
+            </div>
             <div class="clear fix"></div>
         </div>
     </div>
 </div>
-
-@code {
-
-}

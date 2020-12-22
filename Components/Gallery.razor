@@ -1,4 +1,4 @@
-﻿<div id="gallery" class="gallery">
+﻿<div class="gallery" id="@Id">
     <h3 class="title">Gallery</h3>
     <div class="gallery-w3lsrow">
         <div class="col-sm-3 col-xs-6 gallery-grids">
@@ -144,5 +144,6 @@
 </div>
 
 @code {
-
+    [Parameter]
+    public string Id { get; set; } = "gallery";
 }
