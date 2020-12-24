@@ -24,6 +24,7 @@ namespace Wedding
         {
             services.AddOptions();
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
+            services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
