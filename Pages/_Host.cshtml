@@ -33,6 +33,19 @@
         <a class="dismiss">🗙</a>
     </div>
 
+    <div id="components-reconnect-modal"></div>
+    <style>
+        .components-reconnect-modal .components-reconnect-show, .components-reconnect-failed, .components-reconnect-rejected {
+            display: none;
+        }
+    </style>
     <script src="_framework/blazor.server.js"></script>
+    <environment include="Development">
+        <script>
+            Blazor.defaultReconnectionHandler._reconnectCallback = function (d) {
+                document.location.reload();
+            }
+        </script>
+    </environment>
 </body>
 </html>
