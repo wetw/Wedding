@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetCoreLineBotSDK;
+using Wedding.Components;
 using Wedding.Data;
+using Wedding.Services;
 using Wedding.Services.LineBot;
 
 namespace Wedding
@@ -30,6 +32,7 @@ namespace Wedding
             services.AddServerSideBlazor();
             services.AddLineBotSDK(Configuration);
             services.AddSingleton<LineBotApp, WeddingLineBotApp>();
+            services.AddSingleton<CountDownService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,9 +58,9 @@ namespace Wedding
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
-                //¥[¤WMapDefaultControllerRoute()
+                //åŠ ä¸ŠMapDefaultControllerRoute()
                 endpoints.MapDefaultControllerRoute();
-                //¤ä´©³z¹LAttribute«ü©w¸ô¥Ñ
+                //æ”¯æ´é€éAttributeæŒ‡å®šè·¯ç”±
                 endpoints.MapControllers();
             });
         }
