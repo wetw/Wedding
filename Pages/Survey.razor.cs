@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
+using System.Threading.Tasks;
 using Wedding.Data;
 
 namespace Wedding.Pages
@@ -8,10 +11,24 @@ namespace Wedding.Pages
     {
         public EditContext LocalEditContext { get; set; }
         public string ValidationMessage { get; set; }
+
+        [CascadingParameter]
+        private Task<AuthenticationState> AuthenticationStateTask { get; set; }
         private Customer Customer { get; set; }
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
+            var authenticationState = await AuthenticationStateTask.ConfigureAwait(false);
+            if (authenticationState?.User?.Identity is null
+                || !authenticationState.User.Identity.IsAuthenticated)
+            {
+                var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                if (string.IsNullOrWhiteSpace(returnUrl))
+                {
+                    NavigationManager.NavigateTo("api/line/login", true);
+                }
+                NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
+            }
             Customer = new Customer();
         }
 
