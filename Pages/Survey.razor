@@ -1,6 +1,51 @@
 ﻿@page "/Survey"
+@using Wedding.Data
+<EditForm Model="@Customer">
+    <DataAnnotationsValidator />
 
-Survey
-@code {
+    <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
+    
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label" for="LineId">LineId:</label>
+        <div class="col-sm-9">
+            <InputText class="form-control"
+                       @bind-Value="@Customer.LineId" />
+            <ValidationMessage For="@(() => Customer.LineId)" />
+        </div>
+    </div>
 
-}
+    <div class="form-group row mb-1">
+        <label class="col-sm-3 col-form-label" for="Name">Name:</label>
+        <div class="col-sm-9">
+            <InputText class="form-control"
+                       @bind-Value="@Customer.Name" />
+            <ValidationMessage For="@(() => Customer.Name)" />
+        </div>
+    </div>
+    @*<div class="form-group row mb-1">
+            <label class="col-sm-3 col-form-label"
+                   for="LastName">Street:</label>
+            <div class="col-sm-9">
+                <InputText class="form-control"
+                           @bind-Value="@_customer.Street" />
+                <ValidationMessage For="@(() => _customer.Street)" />
+            </div>
+        </div>
+        <div class="form-group row mb-1">
+            <label class="col-sm-3 col-form-label"
+                   for="Birthday">City:</label>
+            <div class="col-sm-9">
+                <InputText class="form-control"
+                           @bind-Value="@_customer.City" />
+                <ValidationMessage For="@(() => _customer.City)" />
+            </div>
+        </div>*@
+</EditForm>
+
+<div>
+    <button class="btn btn-primary" @onclick="OnOK">確定</button>
+</div>
+
+<div class="display-4 text-secondary">
+    @ValidationMessage
+</div>

@@ -4,7 +4,9 @@
     {
         public Beacon Beacon { get; set; }
 
-        public string LiffClientId { get; set; }
+        public string ClientId { get; set; }
+        
+        public string ClientSecret { get; set; }
     }
 
     public partial class Beacon
