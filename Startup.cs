@@ -1,10 +1,3 @@
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -17,6 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetCoreLineBotSDK;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Wedding.Data;
 using Wedding.Services;
 using Wedding.Services.LineBot;
@@ -71,7 +71,6 @@ namespace Wedding
                     }
                     options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "userId");
                     options.ClaimActions.MapJsonKey(ClaimTypes.Name, "displayName");
-                    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
                     options.ClaimActions.MapJsonKey("PictureUrl", "pictureUrl");
                     options.ClaimActions.MapJsonKey("StatusMessage", "statusMessage");
                     options.Events = new OAuthEvents
@@ -85,6 +84,13 @@ namespace Wedding
                             response.EnsureSuccessStatusCode();
                             var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
                             context.RunClaimActions(user.RootElement);
+                            // email 資訊不在 profile 內, https://developers.line.biz/zh-hant/docs/line-login/integrate-line-login/#verify-id-token
+                            //if (options.Scope.Contains("email"))
+                            //{
+                            //    var tokens = context.Properties.GetTokens().ToList();
+                            //    var jwtSecurityToken = new JwtSecurityToken(context.AccessToken);
+                            //    context.Identity.AddClaim(new Claim(ClaimTypes.Email, jwtSecurityToken.Claims.First(c => c.Type == "email")?.Value ?? string.Empty));
+                            //}
                         },
                         OnRemoteFailure = context =>
                         {

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Wedding.Data;
 
@@ -14,7 +15,8 @@ namespace Wedding.Pages
 
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-        private Customer Customer { get; set; }
+
+        private Customer Customer { get; set; } = new Customer();
 
         protected override async Task OnInitializedAsync()
         {
@@ -29,7 +31,20 @@ namespace Wedding.Pages
                 }
                 NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
             }
-            Customer = new Customer();
+
+            var principal = authenticationState?.User;
+            if (principal is null)
+            {
+                return;
+            }
+
+            Customer = new Customer
+            {
+                LineId = principal.FindFirstValue(ClaimTypes.NameIdentifier),
+                Name = principal.FindFirstValue(ClaimTypes.Name),
+                Email = principal.FindFirstValue(ClaimTypes.Email),
+                Avatar = principal.FindFirstValue("PictureUrl")
+            };
         }
 
         public void OnGet()

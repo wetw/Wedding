@@ -1,52 +1,60 @@
 @page "/Survey"
 @attribute [Authorize]
 @inject NavigationManager NavigationManager
-@using Wedding.Data
 
 <AuthorizeView>
-    <Authorized>
-        SUCCESS @context.User.Identity.Name!
-        <!--<EditForm Model="@Customer">
-        <DataAnnotationsValidator />
+    <Authorized Context="auth">
+        <EditForm Model="@Customer">
+            <DataAnnotationsValidator />
 
-        <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
-
-        <div class="form-group row mb-1">
-            <label class="col-sm-3 col-form-label" for="LineId">LineId:</label>
-            <div class="col-sm-9">
-                <InputText class="form-control"
-                           @bind-Value="@Customer.LineId" />
-                <ValidationMessage For="@(() => Customer.LineId)" />
-            </div>
-        </div>
-
-        <div class="form-group row mb-1">
-            <label class="col-sm-3 col-form-label" for="Name">Name:</label>
-            <div class="col-sm-9">
-                <InputText class="form-control"
-                           @bind-Value="@Customer.Name" />
-                <ValidationMessage For="@(() => Customer.Name)" />
-            </div>
-        </div>-->
-        @*<div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label"
-                       for="LastName">Street:</label>
-                <div class="col-sm-9">
-                    <InputText class="form-control"
-                               @bind-Value="@_customer.Street" />
-                    <ValidationMessage For="@(() => _customer.Street)" />
-                </div>
-            </div>
+            <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
+            <img src="@Customer.Avatar" alt="" class="avatar" />
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label"
-                       for="Birthday">City:</label>
+                <label class="col-sm-3 col-form-label" for="LineId">LineId:</label>
                 <div class="col-sm-9">
                     <InputText class="form-control"
-                               @bind-Value="@_customer.City" />
-                    <ValidationMessage For="@(() => _customer.City)" />
+                               @bind-Value="@Customer.LineId" />
+                    <ValidationMessage For="@(() => Customer.LineId)" />
                 </div>
-            </div>*@
-        <!--</EditForm>-->
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-sm-3 col-form-label" for="Name">Name:</label>
+                <div class="col-sm-9">
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.Name" />
+                    <ValidationMessage For="@(() => Customer.Name)" />
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-sm-3 col-form-label" for="Email">Email:</label>
+                <div class="col-sm-9">
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.Email" />
+                    <ValidationMessage For="@(() => Customer.Email)" />
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-sm-3 col-form-label" for="Phone">Phone:</label>
+                <div class="col-sm-9">
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.Phone" />
+                    <ValidationMessage For="@(() => Customer.Phone)" />
+                </div>
+            </div>
+
+            <div class="form-group row mb-1">
+                <label class="col-sm-3 col-form-label" for="Visitors">Visitors:</label>
+                <div class="col-sm-9">
+                    <InputNumber class="form-control"
+                               @bind-Value="@Customer.Visitors" />
+                    <ValidationMessage For="@(() => Customer.Visitors)" />
+                </div>
+            </div>
+            
+        </EditForm>
 
         <div>
             <button class="btn btn-primary" @onclick="OnOK">確定</button>
