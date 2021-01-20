@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -24,9 +25,12 @@ namespace Wedding
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -96,9 +100,9 @@ namespace Wedding
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 // This is needed if running behind a reverse proxy
@@ -111,15 +115,22 @@ namespace Wedding
             }
             else
             {
+                // 避免 oauth 的 redirect_uri 抓到的是 http
+                app.Use(next => context =>
+                {
+                    if (string.Equals(context.Request.Headers["X-Forwarded-Proto"], "https", StringComparison.OrdinalIgnoreCase))
+                    {
+                        context.Request.Scheme = "https";
+                    }
+                    return next(context);
+                });
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
 
-
             app.UseStaticFiles();
-
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
