@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+using System;
+using Microsoft.AspNetCore.Components;
 using System.Timers;
 using Wedding.Services;
 
 namespace Wedding.Components
 {
-    public partial class Countdown
+    public partial class Countdown : IDisposable
     {
         [Inject]
         private CountDownService CountDownService { get; init; }
@@ -23,12 +24,22 @@ namespace Wedding.Components
             _timer = new Timer(1000);
             _timer.Elapsed += CountDownTimer;
             _timer.Enabled = true;
+            _timer.Start();
         }
 
-        private async void CountDownTimer(object source, ElapsedEventArgs e)
+        private void CountDownTimer(object source, ElapsedEventArgs e)
         {
-            (Days, Hours, Minutes, Seconds) = CountDownService.GetLeftDate();
-            await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+            _ = InvokeAsync(() =>
+            {
+                (Days, Hours, Minutes, Seconds) = CountDownService.GetLeftDate();
+                StateHasChanged();
+            });
+        }
+
+        void IDisposable.Dispose()
+        {
+            _timer.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
