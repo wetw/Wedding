@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Wedding.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [Route("api/[controller]")]
     public class LineController : ControllerBase
     {
         private readonly LineBotApp _app;
@@ -18,6 +19,7 @@ namespace Wedding.Controllers
             _app = app;
         }
 
+        [AllowAnonymous]
         [HttpPost("webhook")]
         [LineVerifySignature]
         public async Task<IActionResult> Post(WebhookEvent request)
@@ -26,7 +28,6 @@ namespace Wedding.Controllers
             return Ok();
         }
 
-        [Authorize]
         [HttpGet("login")]
         public IActionResult Login(string returnUrl = null)
         {
