@@ -24,7 +24,7 @@ namespace Wedding.Pages
             if (authenticationState?.User?.Identity is null
                 || !authenticationState.User.Identity.IsAuthenticated)
             {
-                var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                var returnUrl = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
                 if (string.IsNullOrWhiteSpace(returnUrl))
                 {
                     NavigationManager.NavigateTo("api/line/login", true);

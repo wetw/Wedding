@@ -1,10 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetCoreLineBotSDK;
 using NetCoreLineBotSDK.Filters;
 using NetCoreLineBotSDK.Models;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Wedding.Controllers
 {
@@ -31,7 +30,7 @@ namespace Wedding.Controllers
         [HttpGet("login")]
         public IActionResult Login(string returnUrl = null)
         {
-            return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? "/" : $"~/{returnUrl}");
+            return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
         }
     }
 }
