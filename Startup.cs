@@ -108,6 +108,12 @@ namespace Wedding
             {
                 services.AddApplicationInsightsTelemetry();
             }
+
+            if (Configuration.GetValue("Azure:SignalR:Enabled", false)
+                && !string.IsNullOrWhiteSpace(Configuration.GetValue("Azure:SignalR:ConnectionString", string.Empty)))
+            {
+                services.AddSignalR().AddAzureSignalR();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
