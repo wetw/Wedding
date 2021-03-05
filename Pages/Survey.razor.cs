@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Wedding.Data;
+using Wedding.Services.Customer;
 
 namespace Wedding.Pages
 {
@@ -16,7 +16,12 @@ namespace Wedding.Pages
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-        private Customer Customer { get; set; } = new Customer();
+        private Customer Customer { get; set; }
+
+        [Inject]
+        private ICustomerDao CustomerDao { get; init; }
+
+        private bool IsUpdate { get; set; } = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,25 +43,43 @@ namespace Wedding.Pages
                 return;
             }
 
-            Customer = new Customer
+            Customer = await CustomerDao.GetByLineIdAsync(principal.FindFirstValue(ClaimTypes.NameIdentifier)).ConfigureAwait(false);
+
+            if (Customer is null)
             {
-                LineId = principal.FindFirstValue(ClaimTypes.NameIdentifier),
-                Name = principal.FindFirstValue(ClaimTypes.Name),
-                Email = principal.FindFirstValue(ClaimTypes.Email),
-                Avatar = principal.FindFirstValue("PictureUrl")
-            };
+                IsUpdate = false;
+                Customer = new Customer
+                {
+                    LineId = principal.FindFirstValue(ClaimTypes.NameIdentifier),
+                    Name = principal.FindFirstValue(ClaimTypes.Name),
+                    Email = principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+                    Avatar = principal.FindFirstValue("PictureUrl"),
+                };
+            }
         }
 
-        public void OnGet()
+        private async Task ConfirmAsync()
         {
-            Console.WriteLine("123");
+            if (LocalEditContext.Validate())
+            {
+                await CustomerDao.AddAsync(Customer).ConfigureAwait(false);
+            }
+            else
+            {
+                ValidationMessage = "資料有錯，請重新修正";
+            }
         }
 
-        private void OnOK()
+        private async Task UpdateAsync()
         {
-            ValidationMessage = LocalEditContext.Validate()
-                ? "表單驗證正確無誤"
-                : "資料有錯，請重新修正";
+            if (LocalEditContext.Validate())
+            {
+                await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
+            }
+            else
+            {
+                ValidationMessage = "資料有錯，請重新修正";
+            }
         }
 
         private void OnEditContestChanged(EditContext context)

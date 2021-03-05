@@ -17,8 +17,10 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SqlSugar;
 using Wedding.Data;
 using Wedding.Services;
+using Wedding.Services.Customer;
 using Wedding.Services.LineBot;
 
 namespace Wedding
@@ -42,12 +44,14 @@ namespace Wedding
             services.AddOptions();
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
             services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
+            services.Configure<ConnectionConfig>(Configuration.GetSection(nameof(ConnectionConfig)));
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
             services.AddLineBotSDK(Configuration);
             services.AddSingleton<LineBotApp, WeddingLineBotApp>();
             services.AddSingleton<CountDownService>();
+            services.AddScoped<ICustomerDao, CustomerDao>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
