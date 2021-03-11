@@ -13,6 +13,9 @@ namespace Wedding.Components
         [Parameter]
         public string Id { get; set; } = "countdown";
 
+        [Parameter]
+        public string Style { get; set; } = "";
+
         private string Days { get; set; } = "000";
         private string Hours { get; set; } = "00";
         private string Minutes { get; set; } = "00";
