@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
 using System.Globalization;
 using Wedding.Data;
 
 namespace Wedding.Components
 {
-
     public partial class Banner
     {
+        [Parameter]
+        public string Style { get; set; } = "";
 
         [Inject]
         private IConfiguration Configuration { get; init; }
