@@ -12,7 +12,6 @@ body {
   background: #fff;
   letter-spacing: 1px;
   font-family: 'Roboto', sans-serif;
-  scroll-snap-type: y mandatory;
 }
 
   body a {
