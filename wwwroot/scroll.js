@@ -1,7 +1,4 @@
 (() => {
-  const bodyDOM = document.querySelector("body");
-  bodyDOM.style.overflow = "hidden";
-
   // 自動位移
   let moving = false;
   window.addEventListener("mousewheel", (e) => {
