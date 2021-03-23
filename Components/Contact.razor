@@ -1,4 +1,4 @@
-﻿<div class="contact" id="@Id">
+<div class="@Class contact" id="@Id">
     <div class="container">
         <h3 class="title clr">出席回覆</h3>
         <div class="contact-two-grids">
@@ -80,4 +80,6 @@
     [Parameter]
     public string Id { get; set; } = "contact";
 
+    [Parameter]
+    public string Class { get; set; } = "";
 }

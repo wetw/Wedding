@@ -8,7 +8,13 @@ namespace Wedding.Components
     public partial class Banner
     {
         [Parameter]
+        public string Id { get; set; } = "banner";
+
+        [Parameter]
         public string Style { get; set; } = "";
+
+        [Parameter]
+        public string Class { get; set; } = "";
 
         [Inject]
         private IConfiguration Configuration { get; init; }

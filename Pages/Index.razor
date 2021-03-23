@@ -1,23 +1,29 @@
 @page "/"
+@inject IJSRuntime JS
 
-<div class="section">
-    <Banner Style="height: 65vh;" />
-    <Countdown Style="height: 35vh;"/>
-</div>
-<div class="section">
-    <About />
-</div>
-<div class="section">
-    <Services />
-</div>
-<div class="section">
-    <Gallery />
-</div>
-<div class="section">
-    <Contact />
+<div id="fullpage">
+    <Banner class="section" Id="section0" />
+    <About class="section" Id="section1" />
+    <Services class="section" Id="section2" />
+    <Gallery class="section" Id="section3" />
+    <Contact class="section" Id="section4" />
 </div>
 <Backtop />
 
 @code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var objRef = DotNetObjectReference.Create<object>(new
+            {
+                licenseKey = "OPEN-SOURCE-GPLV3-LICENSE",
+                anchors = new[] { "banner", "about", "services", "gallery", "contact" },
+                continuousVertical = true
+            });
 
+            await JS.InvokeVoidAsync("fullpage", "#fullpage", objRef.Value).ConfigureAwait(false);
+        }
+    }
 }
+

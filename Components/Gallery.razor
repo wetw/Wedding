@@ -1,7 +1,7 @@
-﻿<div class="gallery" id="@Id">
-    <h3 class="title">Gallery</h3>
-    <div class="gallery-w3lsrow">
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+<div class="@Class gallery" id="@Id">
+    <h3 class="title" style="height: 10%;">Gallery</h3>
+    <div style="height: 90%; display: flex; flex-wrap: wrap;">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/g1.jpg" data-lightbox="example-set" data-title="京都植物園，滿開的櫻花">
                     <img src="images/g1.jpg" class="img-responsive zoom-img" alt="">
@@ -12,7 +12,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/p1.jpg" data-lightbox="example-set" data-title="京都植物園，滿開的櫻花">
                     <img src="images/p1.jpg" class="img-responsive zoom-img" alt="">
@@ -23,7 +23,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/p2.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/p2.jpg" class="img-responsive zoom-img" alt="">
@@ -34,7 +34,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/g2.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/g2.jpg" class="img-responsive zoom-img" alt="">
@@ -45,7 +45,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/g3.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/g3.jpg" class="img-responsive zoom-img" alt="">
@@ -56,7 +56,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/g5.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/g5.jpg" class="img-responsive zoom-img" alt="">
@@ -67,7 +67,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/p4.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/p4.jpg" class="img-responsive zoom-img" alt="">
@@ -78,7 +78,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 col-xs-6 gallery-grids">
+        <div class="gallery-grids">
             <div class="w3ls-hover">
                 <a href="images/p3.jpg" data-lightbox="example-set" data-title="Lorem Ipsum is simply dummy the when an unknown galley of type and scrambled it to make a type specimen.">
                     <img src="images/p3.jpg" class="img-responsive zoom-img" alt="">
@@ -146,4 +146,7 @@
 @code {
     [Parameter]
     public string Id { get; set; } = "gallery";
+    
+    [Parameter]
+    public string Class { get; set; } = "";
 }

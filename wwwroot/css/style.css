@@ -1,4 +1,4 @@
-﻿/*--
+/*--
 Author: W3layouts
 Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
@@ -927,6 +927,8 @@ background: #428bca;
 }
 
 .gallery-grids {
+  height: 20%;
+  width: 20%;
   padding: 10px;
 }
 
@@ -1961,8 +1963,9 @@ footer p a:hover {
 
   .contact textarea {}
 
-  .gallery-w3lsrow>.gallery-grids:nth-child(n+5) {
-    display: none;
+  .gallery-w3lsrow {
+    height: 33%;
+    width: 33%;
   }
 }
 
