@@ -1,4 +1,4 @@
-<div class="banner" id="banner" style="@Style">
+<div class="@Class banner" id="@Id" style="@Style">
     <div class="header-w3layouts">
         <div class="container">
             <div class="header-bar">
@@ -15,11 +15,11 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class=" navbar-collapse navbar-right collapse @NavMenuCssClass" id="bs-example-navbar-collapse-1">
                         <nav>
-                            <ul class="nav navbar-nav">
-                                <li><a href="#about" @onclick="@ToggledNavMenu" target="_top" class="scroll">時間地點</a></li>
-                                <li><a href="#services" @onclick="@ToggledNavMenu" target="_top" class="scroll">我們的故事</a></li>
-                                <li><a href="#gallery" @onclick="@ToggledNavMenu" target="_top" class="scroll">婚紗照片</a></li>
-                                <li><a href="#contact" @onclick="@ToggledNavMenu" target="_top" class="scroll">出席回覆</a></li>
+                            <ul class="nav navbar-nav" id="menu">
+                                <li><a href="#about" data-menuanchor="about" @onclick="@ToggledNavMenu" target="_top" class="scroll">時間地點</a></li>
+                                <li><a href="#services" data-menuanchor="services" @onclick="@ToggledNavMenu" target="_top" class="scroll">我們的故事</a></li>
+                                <li><a href="#gallery" data-menuanchor="gallery" @onclick="@ToggledNavMenu" target="_top" class="scroll">婚紗照片</a></li>
+                                <li><a href="#contact" data-menuanchor="contact" @onclick="@ToggledNavMenu" target="_top" class="scroll">出席回覆</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -44,4 +44,7 @@
             <div class="clearfix"></div>
         </div>
     </div>
+    <Countdown Style="" />
 </div>
+
+
