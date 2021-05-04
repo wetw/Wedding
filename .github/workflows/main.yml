@@ -18,3 +18,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} 
           image-name: Wedding
+          build-context: ./src
