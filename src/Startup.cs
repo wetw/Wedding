@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using SqlSugar;
 using Wedding.Data;
+using Wedding.Data.ReplyIntent;
 using Wedding.Services;
 using Wedding.Services.Customer;
 using Wedding.Services.LineBot;
@@ -51,6 +52,7 @@ namespace Wedding
             services.AddLineBotSDK(Configuration);
             services.AddSingleton<LineBotApp, WeddingLineBotApp>();
             services.AddSingleton<CountDownService>();
+            services.AddSingleton<BeaconWelcomeIntent>();
             services.AddScoped<ICustomerDao, CustomerDao>();
             services.AddAuthentication(options =>
             {
