@@ -22,7 +22,7 @@ jobs:
         password: ${{ secrets.AzureAppService_ContainerPassword_fef369645c4b4afa883cb53293102597 }}
 
     - run: |
-        docker build . -t wewedding.azurecr.io/wedding:${{ github.sha }}
+        docker build src -t wewedding.azurecr.io/wedding:${{ github.sha }}
         docker push wewedding.azurecr.io/wedding:${{ github.sha }}
 
     - name: Deploy to Azure Web App
