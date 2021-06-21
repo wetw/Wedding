@@ -18,8 +18,7 @@
             var objRef = DotNetObjectReference.Create<object>(new
             {
                 licenseKey = "OPEN-SOURCE-GPLV3-LICENSE",
-                anchors = new[] { "banner", "about", "services", "gallery", "contact" },
-                continuousVertical = true
+                anchors = new[] { "banner", "about", "services", "gallery", "contact" }
             });
 
             await JS.InvokeVoidAsync("fullpage", "#fullpage", objRef.Value).ConfigureAwait(false);
