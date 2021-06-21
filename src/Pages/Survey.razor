@@ -10,7 +10,7 @@
             <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
             <img src="@Customer.Avatar" alt="" class="avatar" />
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label" for="LineId">LineId:</label>
+                <label class="col-form-label" for="LineId">LineId:</label>
                 <div class="col-sm-9">
                     <InputText class="form-control"
                                @bind-Value="@Customer.LineId" />
@@ -19,7 +19,7 @@
             </div>
 
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label" for="Name">Name:</label>
+                <label class="col-form-label" for="Name">Name:</label>
                 <div class="col-sm-9">
                     <InputText class="form-control"
                                @bind-Value="@Customer.Name" />
@@ -28,7 +28,7 @@
             </div>
 
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label" for="Email">Email:</label>
+                <label class="col-form-label" for="Email">Email:</label>
                 <div class="col-sm-9">
                     <InputText class="form-control"
                                @bind-Value="@Customer.Email" />
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label" for="Phone">Phone:</label>
+                <label class="col-form-label" for="Phone">Phone:</label>
                 <div class="col-sm-9">
                     <InputText class="form-control"
                                @bind-Value="@Customer.Phone" />
@@ -46,31 +46,110 @@
             </div>
 
             <div class="form-group row mb-1">
-                <label class="col-sm-3 col-form-label" for="Visitors">Visitors:</label>
+                <label class="col-form-label" for="IsAttend">是否出席:</label>
                 <div class="col-sm-9">
-                    <InputNumber class="form-control"
-                               @bind-Value="@Customer.Visitors" />
-                    <ValidationMessage For="@(() => Customer.Visitors)" />
+                    <InputCheckbox class="form-control"
+                                   @bind-Value="Customer.IsAttend" />
+                    <ValidationMessage For="@(() => Customer.IsAttend)" />
                 </div>
             </div>
-            
+
+            @if (Customer.IsAttend)
+            {
+                <div class="form-group row mb-1">
+                    <label class="col-form-label" for="Visitors">與新人的關係:</label>
+                    <div class="col-sm-9">
+                        <InputSelect class="form-control"
+                                     @bind-Value="@Customer.Relation">
+                            @foreach (var type in Enum.GetValues(typeof(Wedding.Data.RelationType)))
+                                {
+                                <option value="@type">@type</option>
+                                }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Customer.Relation)" />
+                    </div>
+                </div>
+
+                <div class="form-group row mb-1">
+                    <label class="col-form-label" for="Visitors">幾位大人:</label>
+                    <div class="col-sm-9">
+                        <InputNumber class="form-control"
+                                     @bind-Value="@Customer.Visitors" />
+                        <ValidationMessage For="@(() => Customer.Visitors)" />
+                    </div>
+                </div>
+
+                <div class="form-group row mb-1">
+                    <label class="col-form-label" for="Visitors">幾個小孩:</label>
+                    <div class="col-sm-9">
+                        <InputNumber class="form-control"
+                                     @bind-Value="@Customer.ChildrenCount" />
+                        <ValidationMessage For="@(() => Customer.ChildrenCount)" />
+                    </div>
+                </div>
+
+                <div class="form-group row mb-1">
+                    <label class="col-form-label" for="Visitors">寄送實體喜帖:</label>
+                    <div class="col-sm-9">
+                        <InputCheckbox class="form-control"
+                                       @bind-Value="@Customer.IsRealBook" />
+                        <ValidationMessage For="@(() => Customer.IsRealBook)" />
+                    </div>
+                </div>
+
+                @if (Customer.IsRealBook)
+                {
+                    <div class="form-group row mb-1">
+                        <label class="col-form-label" for="Visitors">收喜帖的地址:</label>
+                        <div class="col-sm-9">
+                            <InputText class="form-control"
+                                       @bind-Value="@Customer.Address" />
+                            <ValidationMessage For="@(() => Customer.Address)" />
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group row mb-1">
+                    <label class="col-form-label" for="Visitors">是否吃素:</label>
+                    <div class="col-sm-9">
+                        <InputCheckbox class="form-control"
+                                       @bind-Value="@Customer.IsVegetarian" />
+                        <ValidationMessage For="@(() => Customer.IsVegetarian)" />
+                    </div>
+                </div>
+
+                @if (Customer.IsVegetarian)
+                {
+                    <div class="form-group row mb-1">
+                        <label class="col-form-label" for="Visitors">幾個人吃素:</label>
+                        <div class="col-sm-9">
+                            <InputNumber class="form-control"
+                                         @bind-Value="@Customer.VegetarianCount" />
+                            <ValidationMessage For="@(() => Customer.VegetarianCount)" />
+                        </div>
+                    </div>
+                }
+            }
+
+            <div>
+
+                @if (IsUpdate)
+                {
+                    <button class="btn btn-primary" @onclick="UpdateAsync">更新資料</button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" @onclick="ConfirmAsync">填好了</button>
+                }
+            </div>
+
+            <div class="display-4 text-secondary">
+                @ValidationMessage
+            </div>
+
         </EditForm>
 
-        <div>
 
-            @if (IsUpdate)
-            {
-                <button class="btn btn-primary" @onclick="UpdateAsync">更新資料</button>
-            }
-            else
-            {
-                <button class="btn btn-primary" @onclick="ConfirmAsync">填好了</button>
-            }
-        </div>
-
-        <div class="display-4 text-secondary">
-            @ValidationMessage
-        </div>
     </Authorized>
     <NotAuthorized>
         <h1>Authentication Failure!</h1>

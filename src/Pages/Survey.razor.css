@@ -4,3 +4,14 @@
     height: 50px;
     border-radius: 50%;
 }
+
+.form-group {
+    width: 90%;
+    padding-left: 5%;
+}
+
+.col-form-label {
+    width: 10%;
+    float: left;
+    font-weight: bold;
+}
