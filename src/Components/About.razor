@@ -1,4 +1,4 @@
-<div class="about @Class" id="@Id">
+<div class="about @Class" id="@Id" style="@Style">
     <div class="container">
         <h3 class="title">時間地點</h3>
         <div>
@@ -58,5 +58,8 @@
 
     [Parameter]
     public string Class { get; set; } = "";
+
+    [Parameter]
+    public string Style { get; set; } = "";
 
 }
