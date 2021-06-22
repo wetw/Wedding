@@ -46,6 +46,7 @@ namespace Wedding.Data
         [Range(0, 10)]
         public int VegetarianCount { get; set; } = 0;
 
+        [SugarColumn(IsNullable = true)]
         public string Table { get; set; }
     }
 
