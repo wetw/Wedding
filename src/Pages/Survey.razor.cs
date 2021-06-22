@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Security.Claims;
+using System;
 using System.Threading.Tasks;
 using Wedding.Data;
 using Wedding.Services.Customer;
@@ -62,6 +63,7 @@ namespace Wedding.Pages
         {
             if (LocalEditContext.Validate())
             {
+                Customer.CreationTime = Customer.LastModifyTime = DateTime.UtcNow;
                 await CustomerDao.AddAsync(Customer).ConfigureAwait(false);
             }
             else
@@ -74,6 +76,7 @@ namespace Wedding.Pages
         {
             if (LocalEditContext.Validate())
             {
+                Customer.LastModifyTime = DateTime.UtcNow;
                 await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
             }
             else
