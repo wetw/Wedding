@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 
 namespace Wedding.Data
 {
@@ -13,11 +12,17 @@ namespace Wedding.Data
 
         public Dictionary<string, string> MessageReplyMapping { get; init; }
 
-        public string OnBeaconWelcomeMessage { get; init; }
+        public Dictionary<string, string> PostbackReplyMapping { get; init; }
+
+        public string OnFollowTextMessage { get; init; }
     }
 
     public partial class Beacon
     {
         public bool Enabled { get; set; }
+
+        public bool EnabledAlwaysSendTextMessage { get; init; }
+
+        public string OnBeaconTextMessage { get; init; }
     }
 }

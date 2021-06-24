@@ -1,10 +1,9 @@
-using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using NetCoreLineBotSDK;
 using NetCoreLineBotSDK.Enums;
 using NetCoreLineBotSDK.Interfaces;
 using NetCoreLineBotSDK.Models.LineObject;
-using System.Threading.Tasks;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
 
@@ -12,37 +11,48 @@ namespace Wedding.Services.LineBot
 {
     public class WeddingLineBotApp : LineBotApp
     {
-        private readonly ILineMessageUtility _lineMessageUtility;
         private readonly IOptionsMonitor<LineBotSetting> _settings;
-        private readonly BeaconWelcomeIntent _beaconWelcomeIntent;
+        private readonly OnBeaconIntent _onBeaconIntent;
+        private readonly OnFollowIntent _onFollowIntent;
+        private readonly OnMessageIntent _onMessageIntent;
+        private readonly OnPostbackIntent _onPostbackIntent;
 
-        public WeddingLineBotApp(ILineMessageUtility lineMessageUtility,
+        public WeddingLineBotApp(
+            ILineMessageUtility lineMessageUtility,
             IOptionsMonitor<LineBotSetting> settings,
-            BeaconWelcomeIntent beaconWelcomeIntent) : base(lineMessageUtility)
+            OnBeaconIntent onBeaconIntent,
+            OnFollowIntent onFollowIntent,
+            OnMessageIntent onMessageIntent,
+            OnPostbackIntent onPostbackIntent) : base(lineMessageUtility)
         {
-            _lineMessageUtility = lineMessageUtility;
             _settings = settings;
-            _beaconWelcomeIntent = beaconWelcomeIntent;
+            _onBeaconIntent = onBeaconIntent;
+            _onFollowIntent = onFollowIntent;
+            _onMessageIntent = onMessageIntent;
+            _onPostbackIntent = onPostbackIntent;
         }
 
-        protected override async Task OnMessageAsync(LineEvent ev)
+        protected override async Task OnFollowAsync(LineEvent ev)
         {
-            if (ev.message.Type == LineMessageType.text)
-            {
-                foreach (var message in _settings.CurrentValue.MessageReplyMapping
-                    .Where(message => ev.message.Text.Contains(message.Key)))
-                {
-                    await _lineMessageUtility.ReplyMessageAsync(ev.replyToken, message.Value).ConfigureAwait(false);
-                }
-            }
+            await _onFollowIntent.ReplyAsync(ev).ConfigureAwait(false);
         }
 
-        protected override async Task OnBeaconAsync(LineEvent ev)
+        protected override Task OnMessageAsync(LineEvent ev) =>
+            ev.message.Type == LineMessageType.Text
+                ? _onMessageIntent.ReplyAsync(ev)
+                : Task.CompletedTask;
+
+        protected override Task OnBeaconAsync(LineEvent ev)
         {
-            if (_settings.CurrentValue.Beacon.Enabled && ev.beacon.type == BeaconType.enter)
+            if (_settings.CurrentValue.Beacon.Enabled && ev.beacon.type == BeaconType.Enter)
             {
-                await _beaconWelcomeIntent.ReplyAsync(ev).ConfigureAwait(false);
+                return _onBeaconIntent.ReplyAsync(ev);
             }
+
+            return Task.CompletedTask;
         }
+
+        protected override Task OnPostbackAsync(LineEvent ev) =>
+            _onPostbackIntent.ReplyAsync(ev);
     }
 }

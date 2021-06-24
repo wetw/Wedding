@@ -1,3 +1,10 @@
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -10,13 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetCoreLineBotSDK;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SqlSugar;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
@@ -43,16 +44,14 @@ namespace Wedding
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.AddSingleton(_env.ContentRootFileProvider);
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
-            services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
             services.Configure<ConnectionConfig>(Configuration.GetSection(nameof(ConnectionConfig)));
+            AddLineServices(services);
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
-            services.AddLineBotSDK(Configuration);
-            services.AddSingleton<LineBotApp, WeddingLineBotApp>();
             services.AddSingleton<CountDownService>();
-            services.AddSingleton<BeaconWelcomeIntent>();
             services.AddScoped<ICustomerDao, CustomerDao>();
             services.AddAuthentication(options =>
             {
@@ -166,6 +165,23 @@ namespace Wedding
                 //支援透過Attribute指定路由
                 endpoints.MapControllers();
             });
+        }
+
+        private void AddLineServices(IServiceCollection services)
+        {
+            JsonConvert.DefaultSettings = () =>
+                 new JsonSerializerSettings
+                 {
+                     TypeNameHandling = TypeNameHandling.Auto
+                 };
+            services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
+            services.AddLineBotSDK(Configuration);
+            services.AddSingleton<LineBotApp, WeddingLineBotApp>();
+            // Intent
+            services.AddSingleton<OnBeaconIntent>();
+            services.AddSingleton<OnFollowIntent>();
+            services.AddSingleton<OnMessageIntent>();
+            services.AddSingleton<OnPostbackIntent>();
         }
     }
 }

@@ -1,0 +1,184 @@
+{
+  "type": "flex",
+  "altText": "婚禮資訊0",
+  "contents": {
+    "type": "bubble",
+    "body": {
+      "type": "box",
+      "layout": "vertical",
+      "contents": [
+        {
+          "type": "image",
+          "url": "https://weddingsg.blob.core.windows.net/images/AN8_1350.jpg",
+          "aspectRatio": "16:20",
+          "size": "full",
+          "aspectMode": "cover"
+        },
+        {
+          "type": "text",
+          "text": "韋廷和美茜的婚禮",
+          "size": "xxl",
+          "weight": "bold",
+          "position": "absolute",
+          "offsetStart": "10px",
+          "offsetTop": "20px"
+        },
+        {
+          "type": "box",
+          "layout": "vertical",
+          "margin": "lg",
+          "spacing": "sm",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "icon",
+                  "size": "lg",
+                  "url": "https://image.flaticon.com/icons/png/512/3313/3313772.png",
+                  "offsetTop": "3px"
+                },
+                {
+                  "type": "text",
+                  "text": "地點",
+                  "offsetStart": "5px",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "88 號樂章",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "md",
+                  "offsetStart": "10px",
+                  "flex": 5,
+                  "weight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "icon",
+                  "url": "https://image.flaticon.com/icons/png/128/1124/1124601.png",
+                  "size": "lg",
+                  "offsetTop": "2px"
+                },
+                {
+                  "type": "text",
+                  "text": "日期",
+                  "offsetStart": "5px",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "2021/11/28",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "md",
+                  "flex": 5,
+                  "offsetStart": "10px",
+                  "weight": "bold"
+                }
+              ]
+            },
+            {
+              "type": "box",
+              "layout": "baseline",
+              "spacing": "sm",
+              "contents": [
+                {
+                  "type": "icon",
+                  "url": "https://image.flaticon.com/icons/png/128/4363/4363254.png",
+                  "size": "lg",
+                  "offsetTop": "4px"
+                },
+                {
+                  "type": "text",
+                  "text": "時間",
+                  "offsetStart": "5px",
+                  "weight": "bold"
+                },
+                {
+                  "type": "text",
+                  "text": "PM 12:00",
+                  "wrap": true,
+                  "color": "#666666",
+                  "size": "md",
+                  "flex": 5,
+                  "offsetStart": "10px",
+                  "weight": "bold"
+                }
+              ]
+            }
+          ],
+          "offsetStart": "10px",
+          "offsetEnd": "0px",
+          "position": "absolute",
+          "height": "40%",
+          "width": "100%",
+          "offsetTop": "27%"
+        }
+      ],
+      "paddingAll": "0px"
+    },
+    "footer": {
+      "type": "box",
+      "layout": "vertical",
+      "spacing": "sm",
+      "contents": [
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "加到Google行事曆",
+            "uri": "https://calndr.link/e/R8V9VlsnhN?s=google"
+          },
+          "color": "#ffffffcc",
+          "height": "sm"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "uri",
+            "label": "加到Apple行事曆",
+            "uri": "https://calndr.link/e/R8V9VlsnhN?s=apple"
+          },
+          "color": "#ffffffcc",
+          "height": "sm"
+        },
+        {
+          "type": "separator"
+        },
+        {
+          "type": "button",
+          "action": {
+            "type": "postback",
+            "label": "交通資訊",
+            "data": "TrafficInfo"
+          },
+          "color": "#ffffffcc",
+          "height": "sm"
+        },
+        {
+          "type": "button",
+          "height": "sm",
+          "action": {
+            "type": "uri",
+            "label": "導航前往婚禮會館",
+            "uri": "https://www.google.com/maps/dir//88%E8%99%9F%E6%A8%82%E7%AB%A0"
+          },
+          "color": "#ffffffcc"
+        }
+      ],
+      "flex": 0,
+      "backgroundColor": "#464F69",
+      "paddingAll": "5px"
+    }
+  }
+}

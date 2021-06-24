@@ -1,0 +1,36 @@
+{
+  "type": "text",
+  "text": "?",
+  "QuickReply": {
+    "items": [
+      {
+        "type": "action",
+        "imageUrl": "https://example.com/sushi.png",
+        "action": {
+          "$type": "NetCoreLineBotSDK.Models.Action.UriAction, NetCoreLineBotSDK",
+          "uri": "https://weddingsg.blob.core.windows.net/trafficimages/Info1.jpg",
+          "type": "uri",
+          "label": "View detail"
+        }
+      },
+      {
+        "type": "action",
+        "imageUrl": "https://example.com/tempura.png",
+        "action": {
+          "$type": "NetCoreLineBotSDK.Models.Action.MessageAction, NetCoreLineBotSDK",
+          "type": "message",
+          "label": "Tempura",
+          "text": "Tempura"
+        }
+      },
+      {
+        "type": "action",
+        "action": {
+          "$type": "NetCoreLineBotSDK.Models.Action.LocationAction, NetCoreLineBotSDK",
+          "type": "location",
+          "label": "Send location"
+        }
+      }
+    ]
+  }
+}
