@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -66,7 +67,7 @@ namespace Wedding
                     options.ClientId = Configuration.GetValue("LineBotSetting:ClientId", "");
                     options.ClientSecret = Configuration.GetValue("LineBotSetting:ClientSecret", "");
                     options.CallbackPath = new PathString(Configuration.GetValue("LineBotSetting:CallbackPath", "/api/line/auth"));
-                    options.AuthorizationEndpoint = Configuration.GetValue("LineBotSetting:AuthorizationEndpoint", "https://access.line.me/oauth2/v2.1/authorize");
+                    options.AuthorizationEndpoint = Configuration.GetValue("LineBotSetting:AuthorizationEndpoint", "https://api.line.me/oauth2/v2.1/verify");
                     options.TokenEndpoint = Configuration.GetValue("LineBotSetting:TokenEndpoint", "https://api.line.me/oauth2/v2.1/token");
                     options.UserInformationEndpoint = Configuration.GetValue("LineBotSetting:UserInformationEndpoint", "https://api.line.me/v2/profile");
                     options.SaveTokens = true;
@@ -74,28 +75,31 @@ namespace Wedding
                     {
                         options.Scope.Add(scope);
                     }
-                    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "userId");
-                    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "displayName");
-                    options.ClaimActions.MapJsonKey("PictureUrl", "pictureUrl");
-                    options.ClaimActions.MapJsonKey("StatusMessage", "statusMessage");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                    options.ClaimActions.MapJsonKey("PictureUrl", "picture");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
                     options.Events = new OAuthEvents
                     {
                         OnCreatingTicket = async context =>
                         {
-                            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-                            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
-                            var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted).ConfigureAwait(false);
-                            response.EnsureSuccessStatusCode();
-                            var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-                            context.RunClaimActions(user.RootElement);
-                            // email 資訊不在 profile 內, https://developers.line.biz/zh-hant/docs/line-login/integrate-line-login/#verify-id-token
-                            //if (options.Scope.Contains("email"))
-                            //{
-                            //    var tokens = context.Properties.GetTokens().ToList();
-                            //    var jwtSecurityToken = new JwtSecurityToken(context.AccessToken);
-                            //    context.Identity.AddClaim(new Claim(ClaimTypes.Email, jwtSecurityToken.Claims.First(c => c.Type == "email")?.Value ?? string.Empty));
-                            //}
+                            // https://developers.line.biz/zh-hant/docs/line-login/integrate-line-login/#verify-id-token
+                            var idToken = context.TokenResponse.Response.RootElement.GetString("id_token");
+                            if (!string.IsNullOrWhiteSpace(idToken))
+                            {
+                                var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                                    JsonConvert.SerializeObject(
+                                        new
+                                        {
+                                            id_token = idToken,
+                                            client_id = context.Options.ClientId
+                                        }));
+                                var response = await context.Backchannel.PostAsync(context.Options.UserInformationEndpoint,
+                                    new FormUrlEncodedContent(dictionary)).ConfigureAwait(false);
+                                response.EnsureSuccessStatusCode();
+                                var userInfo = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+                                context.RunClaimActions(userInfo.RootElement);
+                            }
                         },
                         OnRemoteFailure = context =>
                         {
