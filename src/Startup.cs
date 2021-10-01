@@ -67,9 +67,9 @@ namespace Wedding
                     options.ClientId = Configuration.GetValue("LineBotSetting:ClientId", "");
                     options.ClientSecret = Configuration.GetValue("LineBotSetting:ClientSecret", "");
                     options.CallbackPath = new PathString(Configuration.GetValue("LineBotSetting:CallbackPath", "/api/line/auth"));
-                    options.AuthorizationEndpoint = Configuration.GetValue("LineBotSetting:AuthorizationEndpoint", "https://api.line.me/oauth2/v2.1/verify");
+                    options.AuthorizationEndpoint = Configuration.GetValue("LineBotSetting:AuthorizationEndpoint", "https://access.line.me/oauth2/v2.1/authorize");
                     options.TokenEndpoint = Configuration.GetValue("LineBotSetting:TokenEndpoint", "https://api.line.me/oauth2/v2.1/token");
-                    options.UserInformationEndpoint = Configuration.GetValue("LineBotSetting:UserInformationEndpoint", "https://api.line.me/v2/profile");
+                    options.UserInformationEndpoint = Configuration.GetValue("LineBotSetting:UserInformationEndpoint", "https://api.line.me/oauth2/v2.1/verify");
                     options.SaveTokens = true;
                     foreach (var scope in Configuration.GetSection("LineBotSetting:Scopes").GetChildren().Select(c => c.Value))
                     {
