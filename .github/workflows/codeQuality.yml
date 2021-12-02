@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up .NET Core
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: '6.0.x'
+
       - name: Set up projects
         uses: security-code-scan/security-code-scan-add-action@main
 
