@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
@@ -45,7 +47,10 @@ namespace Wedding.Data.ReplyIntent
                             messages.Add(JsonConvert.DeserializeObject<AudioMessage>(json));
                             break;
                         case nameof(FlexMessage):
-                            messages.Add(JsonConvert.DeserializeObject<FlexMessage>(json));
+                            var template = JsonDocument.Parse(json).RootElement.EnumerateObject();
+                            var altText= template.FirstOrDefault(c => c.Name.Equals("altText", StringComparison.OrdinalIgnoreCase)).Value.ToString();
+                            var contents = template.FirstOrDefault(c => c.Name.Equals("contents", StringComparison.OrdinalIgnoreCase)).Value.ToString();
+                            messages.Add(new FlexMessage(contents, altText));
                             break;
                         case nameof(ImageMessage):
                             messages.Add(JsonConvert.DeserializeObject<ImageMessage>(json));
