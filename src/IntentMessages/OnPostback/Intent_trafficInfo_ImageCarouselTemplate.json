@@ -4,7 +4,7 @@
   "columns": {
     "$values": [
       {
-        "$type": "NetCoreLineBotSDK.Models.Message.ImageCarouselColumnAction, NetCoreLineBotSDK",
+        "$type": "NetCoreLineBotSDK.Models.Action.ImageCarouselColumnAction, NetCoreLineBotSDK",
         "imageUrl": "https://weddingsg.blob.core.windows.net/trafficimages/Info1.jpg",
         "action": {
           "$type": "NetCoreLineBotSDK.Models.Action.UriAction, NetCoreLineBotSDK",
@@ -14,7 +14,7 @@
         }
       },
       {
-        "$type": "NetCoreLineBotSDK.Models.Message.ImageCarouselColumnAction, NetCoreLineBotSDK",
+        "$type": "NetCoreLineBotSDK.Models.Action.ImageCarouselColumnAction, NetCoreLineBotSDK",
         "imageUrl": "https://weddingsg.blob.core.windows.net/trafficimages/Info2.jpg",
         "action": {
           "$type": "NetCoreLineBotSDK.Models.Action.UriAction, NetCoreLineBotSDK",
