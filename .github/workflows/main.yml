@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
+        with:
+          submodules: 'recursive'
       
       - name: Build and publish Docker Image to GitHub Registry
         uses: VaultVulp/gp-docker-action@1.2.0
