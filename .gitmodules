@@ -1,0 +1,3 @@
+[submodule "submodules/NetCoreLineBotSDK"]
+	path = submodules/NetCoreLineBotSDK
+	url = https://github.com/weiting-tw/NetCoreLineBotSDK.git
