@@ -1,0 +1,24 @@
+@page "/WeddingPhoto"
+<style>
+    smart-carousel {
+        width: 100%;
+        height: 900px;
+    }
+
+    @@media (min-width: 1200px) smart-carousel .smart-carousel-item .smart-carousel-item-container {
+        background-size: contain !important;
+    }
+
+    smart-carousel:not([animation=none]) .smart-carousel-item, body {
+        background-color: gainsboro;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="card h-auto">
+            <div class="card-body">
+                <Carousel Class="slide" DataSource="@_dataSource" AutoPlay SlideShow HideArrows HideIndicators Loop></Carousel>
+            </div>
+        </div>
+    </div>
+</div>
