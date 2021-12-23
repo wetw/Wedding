@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetCoreLineBotSDK;
 using Newtonsoft.Json;
+using Smart.Blazor;
 using SqlSugar;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
@@ -52,6 +53,7 @@ namespace Wedding
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
+            services.AddSmart();
             services.AddSingleton<CountDownService>();
             services.AddScoped<ICustomerDao, CustomerDao>();
             services.AddAuthentication(options =>
