@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
     <PackageReference Include="Smart.Blazor" Version="11.0.16" />
-    <PackageReference Include="SqlSugarCore" Version="5.0.4.9" />
+    <PackageReference Include="SqlSugarCore" Version="5.0.5.1" />
   </ItemGroup>
 
   <ItemGroup>
