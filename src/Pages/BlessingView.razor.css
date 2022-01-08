@@ -1,0 +1,59 @@
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+smart-button.icon > button {
+  display: flex;
+  align-items: center;
+}
+
+input {
+  width: 80vw !important;
+  margin: 0 10vw;
+}
+
+  input::placeholder {
+    color: gray !important;
+  }
+
+.input-form {
+  padding-top: 5vh;
+  position: relative;
+}
+
+  .input-form > div.button-container {
+    margin: 25px;
+  }
+
+.input-header {
+  height: 100vh;
+  background-image: url(https://cdnweddingweb.azureedge.net/images/AN8_1070.jpg);
+  top: 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.blessing-block {
+  min-height: 165px;
+  background-color: rgba(80,80,80,0.2);
+  width: 80vw;
+  padding-top: 10px;
+  margin: 0 10vw;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: bolder;
+  text-shadow: -0.1px -0.1px 0 #fff, -0.1px 0.1px 0 #fff;
+}
+
+.blessing-header {
+  text-align: center;
+}
+
+.blessing-messgae {
+  text-align: center;
+}

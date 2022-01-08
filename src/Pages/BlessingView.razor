@@ -1,0 +1,32 @@
+@page "/Blessing"
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Security.Claims
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@attribute [Authorize]
+
+<AuthorizeView>
+    <Authorized Context="auth">
+        <div class="input-header"></div>
+        <div class="input-form">
+            <input class="form-control" @bind="_messageInput" placeholder="請輸入您想對我們說的話..." @bind:event="oninput"/>
+
+            <div class="button-container">
+                <Button Class="success primary" Disabled="@(string.IsNullOrWhiteSpace(_messageInput) || !IsConnected)" OnClick="Send">Send</Button>
+            </div>
+            <div class="blessing-block">
+                <div class="blessing-header">
+                    <span>您總共對我們說了 @_blessingTotalCount 次祝福的話</span>
+                </div>
+                <div class="blessing-message">
+
+                    @foreach (var blessing in _blessingList)
+                    {
+                        <div>@blessing.Message</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>

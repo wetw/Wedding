@@ -20,7 +20,8 @@ namespace Wedding.Services
                 InitKeyType = InitKeyType.Attribute
             };
             _db = new SqlSugarClient(config);
-            _db.CodeFirst.InitTables<Data.Customer>();
+            _db.CodeFirst.InitTables<Customer>();
+            _db.CodeFirst.InitTables<Blessing>();
         }
 
         public Task<T> GetAsync(Expression<Func<T, bool>> where)
@@ -30,12 +31,12 @@ namespace Wedding.Services
 
         public Task<T> AddAsync(T obj)
         {
-            return _db.Insertable<T>(obj).ExecuteReturnEntityAsync();
+            return _db.Insertable(obj).ExecuteReturnEntityAsync();
         }
 
         public Task<int> RemoveAsync(T obj)
         {
-            return _db.Deleteable<T>(obj).ExecuteCommandAsync();
+            return _db.Deleteable(obj).ExecuteCommandAsync();
         }
 
         public Task<T> UpdateAsync(T obj, Expression<Func<T, bool>> where)

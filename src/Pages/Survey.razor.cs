@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System;
 using System.Threading.Tasks;
 using Wedding.Data;
-using Wedding.Services.Customer;
+using Wedding.Services;
 
 namespace Wedding.Pages
 {
@@ -22,7 +22,7 @@ namespace Wedding.Pages
         [Inject]
         private ICustomerDao CustomerDao { get; init; }
 
-        private bool IsUpdate { get; set; } = true;
+        private bool IsFilled { get; set; } = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -46,16 +46,17 @@ namespace Wedding.Pages
 
             Customer = await CustomerDao.GetByLineIdAsync(principal.FindFirstValue(ClaimTypes.NameIdentifier)).ConfigureAwait(false);
 
-            if (Customer is null)
+            // 第一次填寫，或是沒帳號時
+            if (Customer is null
+                || (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime)))
             {
-                IsUpdate = false;
-                Customer = new Customer
-                {
-                    LineId = principal.FindFirstValue(ClaimTypes.NameIdentifier),
-                    Name = principal.FindFirstValue(ClaimTypes.Name),
-                    Email = principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
-                    Avatar = principal.FindFirstValue("PictureUrl"),
-                };
+                IsFilled = false;
+                Customer = principal.ToCustomer();
+            }
+
+            if (string.IsNullOrWhiteSpace(Customer.RealName))
+            {
+                Customer.RealName = Customer.Name;
             }
         }
 
@@ -63,7 +64,6 @@ namespace Wedding.Pages
         {
             if (LocalEditContext.Validate())
             {
-                Customer.CreationTime = Customer.LastModifyTime = DateTime.UtcNow;
                 await CustomerDao.AddAsync(Customer).ConfigureAwait(false);
             }
             else
@@ -76,7 +76,6 @@ namespace Wedding.Pages
         {
             if (LocalEditContext.Validate())
             {
-                Customer.LastModifyTime = DateTime.UtcNow;
                 await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
             }
             else
