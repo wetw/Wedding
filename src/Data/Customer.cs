@@ -1,5 +1,7 @@
 using SqlSugar;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Wedding.Data
 {
@@ -15,6 +17,10 @@ namespace Wedding.Data
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        [SugarColumn(IsNullable = true)]
+        public string RealName { get; set; }
 
         [SugarColumn(IsNullable = true)]
         public string Avatar { get; set; }
@@ -32,28 +38,44 @@ namespace Wedding.Data
         public int Visitors { get; set; } = 1;
 
         [Range(0, 10)]
-        public int ChildrenCount { get; set; } = 0;
+        public int ChildrenCount { get; set; }
 
-        public RelationType Relation { get; set; } = RelationType.Man;
+        public RelationType Relation { get; set; }
 
-        public bool IsRealBook { get; set; } = false;
+        public bool IsRealBook { get; set; }
+
+        public bool IsEmailBook { get; set; } = true;
+
 
         [SugarColumn(IsNullable = true)]
         public string Address { get; set; }
 
-        public bool IsVegetarian { get; set; } = false;
+        [MinLength(3), MaxLength(6), SugarColumn(IsNullable = true)]
+        public string PostCode { get; set; }
+
+        public bool IsVegetarian { get; set; }
 
         [Range(0, 10)]
-        public int VegetarianCount { get; set; } = 0;
+        public int VegetarianCount { get; set; }
 
         [SugarColumn(IsNullable = true)]
         public string Table { get; set; }
+
+        public string Message { get; set; }
     }
 
     public enum RelationType
     {
-        Man,
-        Woman
+        韋廷親戚,
+        韋廷同事,
+        韋廷同學,
+        韋廷朋友,
+        美茜親戚,
+        美茜同事,
+        美茜同學,
+        美茜朋友,
+        其他
+    }
 
     public static class CusomerExtension
     {
