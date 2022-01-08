@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,8 +24,8 @@ using Smart.Blazor;
 using SqlSugar;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
+using Wedding.Hubs;
 using Wedding.Services;
-using Wedding.Services.Customer;
 using Wedding.Services.LineBot;
 
 namespace Wedding
@@ -54,8 +55,14 @@ namespace Wedding
             services.AddControllers();
             services.AddServerSideBlazor();
             services.AddSmart();
+            services.AddResponseCompression(opts =>
+            {
+                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/octet-stream" });
+            });
             services.AddSingleton<CountDownService>();
             services.AddScoped<ICustomerDao, CustomerDao>();
+            services.AddScoped<IBlessingDao, BlessingDao>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -166,6 +173,7 @@ namespace Wedding
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHub<PhotoHub>("/photoHub");
                 //加上MapDefaultControllerRoute()
                 endpoints.MapDefaultControllerRoute();
                 //支援透過Attribute指定路由

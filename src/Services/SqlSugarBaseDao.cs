@@ -21,6 +21,7 @@ namespace Wedding.Services
             };
             _db = new SqlSugarClient(config);
             _db.CodeFirst.InitTables<Data.Customer>();
+            _db.CodeFirst.InitTables<Blessing>();
         }
 
         public Task<T> GetAsync(Expression<Func<T, bool>> where)

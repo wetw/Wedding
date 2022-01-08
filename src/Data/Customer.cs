@@ -54,5 +54,30 @@ namespace Wedding.Data
     {
         Man,
         Woman
+
+    public static class CusomerExtension
+    {
+        public static Customer ToCustomer(this ClaimsPrincipal principal)
+        {
+            if (principal is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Customer
+                {
+                    LineId = principal.FindFirstValue(ClaimTypes.NameIdentifier),
+                    Name = principal.FindFirstValue(ClaimTypes.Name),
+                    Email = principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
+                    Avatar = principal.FindFirstValue("PictureUrl"),
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
