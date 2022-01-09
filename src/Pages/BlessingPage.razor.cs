@@ -11,7 +11,7 @@ using Wedding.Services;
 
 namespace Wedding.Pages
 {
-    public partial class BlessingView
+    public partial class BlessingPage
     {
         [Inject]
         protected IBlessingDao BlessingDao { get; init; }
