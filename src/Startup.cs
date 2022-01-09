@@ -108,6 +108,14 @@ namespace Wedding
                                 response.EnsureSuccessStatusCode();
                                 var userInfo = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
                                 context.RunClaimActions(userInfo.RootElement);
+                                var adminIds = Configuration.GetSection("LineBotSetting:AdminIds").GetChildren().Select(c => c.Value);
+                                var userId = context.Identity.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                                if (!string.IsNullOrWhiteSpace(userId)
+                                    && adminIds.Any()
+                                    && adminIds.Contains(userId))
+                                {
+                                    context.Identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
+                                }
                             }
                         },
                         OnRemoteFailure = context =>

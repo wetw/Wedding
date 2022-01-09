@@ -1,5 +1,6 @@
-using SqlSugar;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using SqlSugar;
 using Wedding.Data;
 
 namespace Wedding.Services
@@ -26,6 +27,12 @@ namespace Wedding.Services
             customer.LastModifyTime = System.DateTime.UtcNow;
             _db.Updateable(customer).ExecuteCommandAsync();
             return GetByLineIdAsync(lineId);
+        }
+
+        public async Task<IList<Customer>> GetListAsync(int pageIndex = 1, int pageSize = 10)
+        {
+            RefAsync<int> total = 0;
+            return await _db.Queryable<Customer>().ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
         }
     }
 }

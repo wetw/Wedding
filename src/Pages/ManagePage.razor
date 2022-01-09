@@ -1,0 +1,31 @@
+@page "/Manage"
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <h3>ManagePage</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>LineId</th>
+                    <th>Name</th>
+                    <th>Attend</th>
+                    <th>LastModifyTime</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var customer in _customers)
+                {
+                    <tr>
+                        <td>@customer.Id</td>
+                        <td>@customer.LineId</td>
+                        <td>@customer.RealName</td>
+                        <td>@customer.IsAttend</td>
+                        <td>@customer.LastModifyTime</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+</AuthorizeView>
+

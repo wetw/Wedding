@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wedding.Data;
 
@@ -12,5 +13,7 @@ namespace Wedding.Services
         Task<Customer> UpdateAsync(Customer customer, string lineId);
 
         Task<int> RemoveAsync(Customer customer);
+
+        Task<IList<Customer>> GetListAsync(int pageIndex = 1, int pageSize = 10);
     }
 }
