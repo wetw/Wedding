@@ -47,28 +47,19 @@ namespace Wedding.Pages
             Customer = await CustomerDao.GetByLineIdAsync(principal.FindFirstValue(ClaimTypes.NameIdentifier)).ConfigureAwait(false);
 
             // 第一次填寫，或是沒帳號時
-            if (Customer is null
-                || (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime)))
+            if (Customer is null)
+            {
+                Customer = principal.ToCustomer();
+            }
+
+            if (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime))
             {
                 IsFilled = false;
-                Customer = principal.ToCustomer();
             }
 
             if (string.IsNullOrWhiteSpace(Customer.RealName))
             {
                 Customer.RealName = Customer.Name;
-            }
-        }
-
-        private async Task ConfirmAsync()
-        {
-            if (LocalEditContext.Validate())
-            {
-                await CustomerDao.AddAsync(Customer).ConfigureAwait(false);
-            }
-            else
-            {
-                ValidationMessage = "資料有錯，請重新修正";
             }
         }
 

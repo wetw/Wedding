@@ -34,7 +34,6 @@ namespace Wedding.Data
         public bool IsAttend { get; set; } = true;
 
         [Range(0, 10)]
-        [SugarColumn(IsNullable = true)]
         public int Visitors { get; set; } = 1;
 
         [Range(0, 10)]
@@ -61,19 +60,22 @@ namespace Wedding.Data
         [SugarColumn(IsNullable = true)]
         public string Table { get; set; }
 
+        [SugarColumn(IsNullable = true)]
         public string Message { get; set; }
     }
 
     public enum RelationType
     {
-        韋廷親戚,
-        韋廷同事,
-        韋廷同學,
-        韋廷朋友,
-        美茜親戚,
-        美茜同事,
-        美茜同學,
-        美茜朋友,
+        男方親戚,
+        男方長輩親友,
+        男方同事,
+        男方同學,
+        男方朋友,
+        女方親戚,
+        女方長輩親友,
+        女方同事,
+        女方同學,
+        女方朋友,
         其他
     }
 
