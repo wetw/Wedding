@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -15,6 +14,9 @@ namespace Wedding.Pages
     {
         [Inject]
         protected IBlessingDao BlessingDao { get; init; }
+        [Inject]
+        private NavigationManager NavigationManager { get; init; }
+
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; set; }
         private HubConnection _hubConnection;

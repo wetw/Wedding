@@ -41,7 +41,7 @@ namespace Wedding.Controllers
             {
                 var customer = User.ToCustomer();
                 if (!string.IsNullOrWhiteSpace(customer?.LineId)
-                    && await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) == null)
+                    && await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) is null)
                 {
                     await _customerDao.AddAsync(customer).ConfigureAwait(false);
                 }
@@ -54,11 +54,10 @@ namespace Wedding.Controllers
 
         [AllowAnonymous]
         [HttpGet("logout")]
-        public IActionResult LogoutAsync(string returnUrl = null)
+        public async Task<IActionResult> LogoutAsync(string returnUrl = null)
         {
-            return SignOut(
-                new AuthenticationProperties { RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/" },
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync().ConfigureAwait(false);
+            return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
         }
     }
 }
