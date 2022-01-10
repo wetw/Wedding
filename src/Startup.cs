@@ -17,9 +17,12 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NetCoreLineBotSDK;
 using Newtonsoft.Json;
+using SendGrid;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.Email;
 using Smart.Blazor;
 using SqlSugar;
 using Wedding.Data;
@@ -46,6 +49,25 @@ namespace Wedding
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var loggerFacotry = new LoggerConfiguration()
+                .Enrich.WithProperty("MachineName", Environment.MachineName)
+                .ReadFrom.Configuration(Configuration);
+            var apikey = Configuration.GetValue("Mail:SendGrid:ApiKey", "");
+            if (!string.IsNullOrWhiteSpace(apikey))
+            {
+                loggerFacotry.WriteTo.Email(
+                    new EmailConnectionInfo
+                    {
+                        EmailSubject = Configuration.GetValue("Mail:EmailSubject", "Application Error"),
+                        FromEmail = Configuration.GetValue("Mail:FromEmail", "no-reply@example.com"),
+                        ToEmail = Configuration.GetValue("Mail:ToEmail", "no-reply@example.com"),
+                        SendGridClient = new SendGridClient(apikey),
+                        FromName = Configuration.GetValue("Mail:FromName", "no-reply@example.com")
+                    },
+                    restrictedToMinimumLevel: LogEventLevel.Error);
+            }
+            Log.Logger = loggerFacotry.CreateLogger();
             services.AddOptions();
             services.AddSingleton(_env.ContentRootFileProvider);
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
@@ -121,19 +143,13 @@ namespace Wedding
                         OnRemoteFailure = context =>
                         {
                             var failure = context.Failure;
-                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<OAuthEvents>>();
-                            logger.LogError(failure, failure?.Message);
+                            Log.Logger.Error(failure?.Message, failure);
                             context.Response.Redirect("/");
                             context.HandleResponse();
                             return Task.CompletedTask;
                         }
                     };
                 });
-            if (!string.IsNullOrWhiteSpace(
-                Configuration.GetValue("ApplicationInsights:InstrumentationKey", string.Empty)))
-            {
-                services.AddApplicationInsightsTelemetry();
-            }
 
             if (Configuration.GetValue("Azure:SignalR:Enabled", false)
                 && !string.IsNullOrWhiteSpace(Configuration.GetValue("Azure:SignalR:ConnectionString", string.Empty)))
@@ -173,6 +189,7 @@ namespace Wedding
                 app.UseHttpsRedirection();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
