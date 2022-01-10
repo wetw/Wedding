@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetCoreLineBotSDK;
 using NetCoreLineBotSDK.Filters;
 using NetCoreLineBotSDK.Models;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Wedding.Data;
 using Wedding.Services;
 
@@ -39,7 +40,8 @@ namespace Wedding.Controllers
             try
             {
                 var customer = User.ToCustomer();
-                if (await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) == null)
+                if (!string.IsNullOrWhiteSpace(customer?.LineId)
+                    && await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) == null)
                 {
                     await _customerDao.AddAsync(customer).ConfigureAwait(false);
                 }
@@ -48,7 +50,15 @@ namespace Wedding.Controllers
             {
             }
             return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
+        }
 
+        [AllowAnonymous]
+        [HttpGet("logout")]
+        public IActionResult LogoutAsync(string returnUrl = null)
+        {
+            return SignOut(
+                new AuthenticationProperties { RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/" },
+                CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }
