@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using System.Security.Claims;
-using System;
 using System.Threading.Tasks;
 using Wedding.Data;
 using Wedding.Services;
@@ -21,6 +19,9 @@ namespace Wedding.Pages
 
         [Inject]
         private ICustomerDao CustomerDao { get; init; }
+
+        [Inject]
+        private NavigationManager NavigationManager { get; init; }
 
         private bool IsFilled { get; set; } = true;
 
