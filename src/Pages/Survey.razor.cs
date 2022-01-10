@@ -38,26 +38,21 @@ namespace Wedding.Pages
                 NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
             }
 
-            var principal = authenticationState?.User;
-            if (principal is null)
+            var customer = authenticationState?.User?.ToCustomer();
+            if (customer is null)
             {
                 return;
             }
-
-            Customer = await CustomerDao.GetByLineIdAsync(principal.FindFirstValue(ClaimTypes.NameIdentifier)).ConfigureAwait(false);
-
+            
             // 第一次填寫，或是沒帳號時
-            if (Customer is null)
-            {
-                Customer = principal.ToCustomer();
-            }
-
+            Customer = await CustomerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) 
+                ?? await CustomerDao.AddAsync(customer).ConfigureAwait(false);
             if (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime))
             {
                 IsFilled = false;
             }
 
-            if (string.IsNullOrWhiteSpace(Customer.RealName))
+            if (Customer != null && string.IsNullOrWhiteSpace(Customer.RealName))
             {
                 Customer.RealName = Customer.Name;
             }

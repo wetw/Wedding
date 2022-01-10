@@ -31,7 +31,8 @@ namespace Wedding.Data
         [SugarColumn(IsNullable = true)]
         public string Phone { get; set; }
 
-        public bool IsAttend { get; set; } = true;
+        [SugarColumn(IsNullable = true)]
+        public bool? IsAttend { get; set; } = null;
 
         [Range(0, 10)]
         public int Visitors { get; set; } = 1;
@@ -43,7 +44,7 @@ namespace Wedding.Data
 
         public bool IsRealBook { get; set; }
 
-        public bool IsEmailBook { get; set; } = true;
+        public bool IsEmailBook { get; set; }
 
 
         [SugarColumn(IsNullable = true)]
