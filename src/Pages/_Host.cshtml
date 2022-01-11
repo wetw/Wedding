@@ -1,57 +1,8 @@
 @page "/"
-@namespace Wedding.Pages
+@namespace Wedding.Pages.Shared
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    Layout = null;
+    Layout = "_Layout";
 }
 
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WE Wedding</title>
-    <base href="~/" />
-    <link href="css/bootstrap/bootstrap.css" rel="stylesheet" />
-    <link href="css/site.css" rel="stylesheet" />
-    <link href="css/lightbox.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
-    <link href="fullpage.css" rel="stylesheet" />
-    <script src="fullpage.js"></script>
-    <link href="_content/Smart.Blazor/css/smart.default.css" rel="stylesheet" />
-    <script src="_content/Smart.Blazor/js/smart.blazor.js"></script>
-    <script type="module" src="_content/Smart.Blazor/js/modules/smart.Carousel.js"></script>
-    <link href="Wedding.styles.css" rel="stylesheet" />
-</head>
-<body>
-    <component type="typeof(App)" render-mode="ServerPrerendered" />
-
-    <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
-
-    <div id="components-reconnect-modal"></div>
-    <style>
-        .components-reconnect-modal .components-reconnect-show, .components-reconnect-failed, .components-reconnect-rejected {
-            display: none;
-        }
-    </style>
-    <script src="_framework/blazor.server.js"></script>
-    <environment include="Development">
-        <script>
-            Blazor.defaultReconnectionHandler._reconnectCallback = function (d) {
-                document.location.reload();
-            }
-        </script>
-    </environment>
-</body>
-</html>
+<component type="typeof(App)" render-mode="ServerPrerendered" />
