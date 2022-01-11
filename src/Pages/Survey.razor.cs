@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Wedding.Data;
 using Wedding.Services;
 
@@ -22,6 +24,9 @@ namespace Wedding.Pages
 
         [Inject]
         private NavigationManager NavigationManager { get; init; }
+
+        [Inject]
+        private ILogger<Survey> Logger { get; set; }
 
         private bool IsFilled { get; set; } = true;
 
@@ -64,6 +69,7 @@ namespace Wedding.Pages
             if (LocalEditContext.Validate())
             {
                 await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
+                Logger.LogInformation($"Updated with: {JsonConvert.SerializeObject(Customer)}");
             }
             else
             {

@@ -50,24 +50,23 @@ namespace Wedding
         public void ConfigureServices(IServiceCollection services)
         {
 
-            var loggerFacotry = new LoggerConfiguration()
-                .Enrich.WithProperty("MachineName", Environment.MachineName)
+            var loggerFactory = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration);
-            var apikey = Configuration.GetValue("Mail:SendGrid:ApiKey", "");
-            if (!string.IsNullOrWhiteSpace(apikey))
+            var apiKey = Configuration.GetValue("Mail:SendGrid:ApiKey", "");
+            if (!string.IsNullOrWhiteSpace(apiKey))
             {
-                loggerFacotry.WriteTo.Email(
+                loggerFactory.WriteTo.Email(
                     new EmailConnectionInfo
                     {
                         EmailSubject = Configuration.GetValue("Mail:EmailSubject", "Application Error"),
                         FromEmail = Configuration.GetValue("Mail:FromEmail", "no-reply@example.com"),
                         ToEmail = Configuration.GetValue("Mail:ToEmail", "no-reply@example.com"),
-                        SendGridClient = new SendGridClient(apikey),
+                        SendGridClient = new SendGridClient(apiKey),
                         FromName = Configuration.GetValue("Mail:FromName", "no-reply@example.com")
                     },
                     restrictedToMinimumLevel: LogEventLevel.Error);
             }
-            Log.Logger = loggerFacotry.CreateLogger();
+            Log.Logger = loggerFactory.CreateLogger();
             services.AddOptions();
             services.AddSingleton(_env.ContentRootFileProvider);
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
@@ -189,7 +188,10 @@ namespace Wedding
                 app.UseHttpsRedirection();
             }
 
-            app.UseSerilogRequestLogging();
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.EnrichDiagnosticContext = SetSeriLogProperties;
+            });
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
@@ -221,6 +223,18 @@ namespace Wedding
             services.AddSingleton<OnFollowIntent>();
             services.AddSingleton<OnMessageIntent>();
             services.AddSingleton<OnPostbackIntent>();
+        }
+
+        private void SetSeriLogProperties(IDiagnosticContext diagnosticContext, HttpContext httpContext)
+        {
+            var customer = httpContext.User.ToCustomer();
+            if (customer is null)
+            {
+                return;
+            }
+
+            diagnosticContext.Set("UserName", customer.Name);
+            diagnosticContext.Set("UserId", customer.LineId);
         }
     }
 }
