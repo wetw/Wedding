@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using LineDC.Liff;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
@@ -223,6 +224,7 @@ namespace Wedding
             services.AddSingleton<OnFollowIntent>();
             services.AddSingleton<OnMessageIntent>();
             services.AddSingleton<OnPostbackIntent>();
+            services.AddScoped<ILiffClient>(_ => new LiffClient(Configuration.GetValue("Liff:ClientId", string.Empty)));
         }
 
         private void SetSeriLogProperties(IDiagnosticContext diagnosticContext, HttpContext httpContext)
