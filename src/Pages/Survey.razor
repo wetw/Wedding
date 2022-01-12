@@ -1,170 +1,183 @@
 @page "/Survey"
 
 <PageTitle>參加意願調查</PageTitle>
+<div class="@IsMask">
+    <EditForm Model="@Customer">
+        <DataAnnotationsValidator />
 
-<AuthorizeView>
-    <Authorized Context="auth">
-        <EditForm Model="@Customer">
-            <DataAnnotationsValidator />
+        <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
 
-            <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
+        <div class="input-form">
+            <div class="form-group form-row">
+                <img src="@Customer.Avatar" alt="" class="avatar" />
+            </div>
 
-            <div class="input-form">
-                <div class="form-group form-row">
-                    <img src="@Customer.Avatar" alt="" class="avatar" />
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Name">姓名</label>
-                        <InputText class="form-control"
-                                   @bind-Value="@Customer.RealName" />
-                        <ValidationMessage For="@(() => Customer.RealName)" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Email">Email</label>
-                        <InputText class="form-control"
-                                   @bind-Value="@Customer.Email" />
-                        <ValidationMessage For="@(() => Customer.Email)" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Phone">連絡電話</label>
-                        <InputText class="form-control"
-                                   @bind-Value="@Customer.Phone" />
-                        <ValidationMessage For="@(() => Customer.Phone)" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Visitors">與新人的關係</label>
-                        <InputSelect class="form-control" @bind-Value="@Customer.Relation">
-                            @foreach (var type in Enum.GetValues(typeof(Wedding.Data.RelationType)))
-                            {
-                                <option value="@type">@type</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => Customer.Relation)" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsEmailBook" /> 是否需要電子喜帖</span>
-                        <ValidationMessage For="@(() => Customer.IsEmailBook)" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsRealBook" /> 是否需要實體喜帖</span>
-                        <ValidationMessage For="@(() => Customer.IsRealBook)" />
-                    </div>
-                </div>
-
-                @if (Customer.IsRealBook)
-                {
-                    <div class="form-group form-row">
-                        <div class="col-sm-3">
-                            <label class="col-form-label" for="Visitors">郵遞區號</label>
-                            <InputText class="form-control" @bind-Value="@Customer.PostCode" />
-                            <ValidationMessage For="@(() => Customer.PostCode)" />
-                        </div>
-                    </div>
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label class="col-form-label" for="Visitors">地址</label>
-                            <InputText class="form-control" @bind-Value="@Customer.Address" />
-                            <ValidationMessage For="@(() => Customer.Address)" />
-                        </div>
-                    </div>
-                }
-
-                <div class="form-group form-row">
-                    <div class="col-sm-12" style="display: grid;">
-                        <label class="col-form-label" for="IsAttend">是否出席</label>
-                        <InputRadioGroup Name="IsAttend" @bind-Value="Customer.IsAttend">
-                            <label><InputRadio Name="IsAttend" Value="true" /> 絕對出席!</label>
-                            <label><InputRadio Name="IsAttend" Value="false" /> 無法出席，但心意滿滿!</label>
-                        </InputRadioGroup>
-                        <ValidationMessage For="@(() => Customer.IsAttend)" />
-                    </div>
-                </div>
-
-                @if (Customer.IsAttend is true)
-                {
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label class="col-form-label" required for="Visitors">幾位大人</label>
-                            <InputNumber class="form-control"
-                                     @bind-Value="@Customer.Visitors" />
-                            <ValidationMessage For="@(() => Customer.Visitors)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label class="col-form-label" required for="Visitors">幾個兒童椅</label>
-                            <InputNumber class="form-control"
-                                     @bind-Value="@Customer.ChildrenCount" />
-                            <ValidationMessage For="@(() => Customer.ChildrenCount)" />
-                        </div>
-                    </div>
-
-                    <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsVegetarian" /> 有吃素</span>
-                            <ValidationMessage For="@(() => Customer.IsVegetarian)" />
-                        </div>
-                    </div>
-
-                    @if (Customer.IsVegetarian)
-                    {
-                        <div class="form-group form-row">
-                            <div class="col-sm-12">
-                                <label class="col-form-label" for="Visitors">幾個人吃素</label>
-                                <InputNumber class="form-control"
-                                     @bind-Value="@Customer.VegetarianCount" />
-                                <ValidationMessage For="@(() => Customer.VegetarianCount)" />
-                            </div>
-                        </div>
-                    }
-                }
-
-                <div class="form-group form-row" style="display: grid;">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" for="Message">有甚麼話想要和我們說的嗎</label>
-                        <InputTextArea class="col-form-label" style="width: 100%;" rows="4" @bind-Value="Customer.Message" />
-                    </div>
-                </div>
-
-                <div class="form-group form-row">
-                    @if (IsFilled)
-                    {
-                        <button class="btn btn-primary" @onclick="UpdateAsync">更新資料</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary" @onclick="UpdateAsync">填好了</button>
-                    }
-                </div>
-
-                <div class="display-4 text-secondary">
-                    @ValidationMessage
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label class="col-form-label" required for="Name">姓名</label>
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.RealName" />
+                    <ValidationMessage For="@(() => Customer.RealName)" />
                 </div>
             </div>
-        </EditForm>
 
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label class="col-form-label" required for="Email">Email</label>
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.Email" />
+                    <ValidationMessage For="@(() => Customer.Email)" />
+                </div>
+            </div>
 
-    </Authorized>
-    <NotAuthorized>
-        <h1>Authentication Failure!</h1>
-        <p>You're not signed in.</p>
-    </NotAuthorized>
-</AuthorizeView>
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label class="col-form-label" required for="Phone">連絡電話</label>
+                    <InputText class="form-control"
+                               @bind-Value="@Customer.Phone" />
+                    <ValidationMessage For="@(() => Customer.Phone)" />
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label class="col-form-label" required for="Visitors">與新人的關係</label>
+                    <InputSelect class="form-control" @bind-Value="@Customer.Relation">
+                        @foreach (var type in Enum.GetValues(typeof(Wedding.Data.RelationType)))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Customer.Relation)" />
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label>
+                        <InputCheckbox @bind-Value="@Customer.IsEmailBook" />
+                        <span for="Visitors"> 是否需要電子喜帖</span>
+                    </label>
+                    <ValidationMessage For="@(() => Customer.IsEmailBook)" />
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-sm-12">
+                    <label>
+                        <InputCheckbox @bind-Value="@Customer.IsRealBook" />
+                        <span for="Visitors"> 是否需要實體喜帖</span>
+                    </label>
+                    <ValidationMessage For="@(() => Customer.IsRealBook)" />
+                </div>
+            </div>
+
+            @if (Customer.IsRealBook)
+            {
+                <div class="form-group form-row">
+                    <div class="col-sm-3">
+                        <label class="col-form-label" for="Visitors">郵遞區號</label>
+                        <InputText class="form-control" @bind-Value="@Customer.PostCode" />
+                        <ValidationMessage For="@(() => Customer.PostCode)" />
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-sm-12">
+                        <label class="col-form-label" for="Visitors">地址</label>
+                        <InputText class="form-control" @bind-Value="@Customer.Address" />
+                        <ValidationMessage For="@(() => Customer.Address)" />
+                    </div>
+                </div>
+            }
+
+            <div class="form-group form-row">
+                <div class="col-sm-12" style="display: grid;">
+                    <label class="col-form-label" for="IsAttend">是否出席</label>
+                    <InputRadioGroup Name="IsAttend" @bind-Value="Customer.IsAttend">
+                        <label><InputRadio Name="IsAttend" Value="true" /> 絕對出席!</label>
+                        <label><InputRadio Name="IsAttend" Value="false" /> 無法出席，但心意滿滿!</label>
+                    </InputRadioGroup>
+                    <ValidationMessage For="@(() => Customer.IsAttend)" />
+                </div>
+            </div>
+
+            @if (Customer.IsAttend is true)
+            {
+                <div class="form-group form-row">
+                    <div class="col-sm-12">
+                        <label class="col-form-label" required for="Visitors">幾位大人</label>
+                        <InputNumber class="form-control"
+                                 @bind-Value="@Customer.Visitors" />
+                        <ValidationMessage For="@(() => Customer.Visitors)" />
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    <div class="col-sm-12">
+                        <label class="col-form-label" required for="Visitors">幾個兒童椅</label>
+                        <InputNumber class="form-control"
+                                 @bind-Value="@Customer.ChildrenCount" />
+                        <ValidationMessage For="@(() => Customer.ChildrenCount)" />
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    <div class="col-sm-12">
+                        <label>
+                            <InputCheckbox @bind-Value="@Customer.IsVegetarian" />
+                            <span for="Visitors"> 有吃素</span>
+                        </label>
+                        <ValidationMessage For="@(() => Customer.IsVegetarian)" />
+                    </div>
+                </div>
+
+                @if (Customer.IsVegetarian)
+                {
+                    <div class="form-group form-row">
+                        <div class="col-sm-12">
+                            <label class="col-form-label" for="Visitors">幾個人吃素</label>
+                            <InputNumber class="form-control"
+                                 @bind-Value="@Customer.VegetarianCount" />
+                            <ValidationMessage For="@(() => Customer.VegetarianCount)" />
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="form-group form-row" style="display: grid;">
+                <div class="col-sm-12">
+                    <label class="col-form-label" for="Message">有甚麼話想要和我們說的嗎</label>
+                    <InputTextArea class="col-form-label" style="width: 100%;" rows="4" @bind-Value="Customer.Message" />
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                @if (IsFilled)
+                {
+                    <button class="btn btn-primary" @onclick="UpdateAsync">更新資料</button>
+                }
+                else
+                {
+                    <button class="btn btn-primary" @onclick="UpdateAsync">填好了</button>
+                }
+            </div>
+
+            <div class="display-4 text-secondary">
+                @ValidationMessage
+            </div>
+        </div>
+    </EditForm>
+</div>
+@if (string.IsNullOrWhiteSpace(Customer?.LineId))
+{
+    <div class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+}
