@@ -35,3 +35,9 @@
   grid-template-columns: 107px auto;
   padding: 5px 0;
 }
+
+input[type=checkbox] + span {
+  display: inline-block;
+  float: initial;
+  user-select: none;
+}

@@ -56,14 +56,20 @@
 
                 <div class="form-group form-row">
                     <div class="col-sm-12">
-                        <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsEmailBook" /> 是否需要電子喜帖</span>
+                        <label>
+                            <InputCheckbox @bind-Value="@Customer.IsEmailBook" />
+                            <span for="Visitors"> 是否需要電子喜帖</span>
+                        </label>
                         <ValidationMessage For="@(() => Customer.IsEmailBook)" />
                     </div>
                 </div>
 
                 <div class="form-group form-row">
                     <div class="col-sm-12">
-                        <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsRealBook" /> 是否需要實體喜帖</span>
+                        <label>
+                            <InputCheckbox @bind-Value="@Customer.IsRealBook" />
+                            <span for="Visitors"> 是否需要實體喜帖</span>
+                        </label>
                         <ValidationMessage For="@(() => Customer.IsRealBook)" />
                     </div>
                 </div>
@@ -119,7 +125,10 @@
 
                     <div class="form-group form-row">
                         <div class="col-sm-12">
-                            <span for="Visitors"><InputCheckbox @bind-Value="@Customer.IsVegetarian" /> 有吃素</span>
+                            <label>
+                                <InputCheckbox @bind-Value="@Customer.IsVegetarian" />
+                                <span for="Visitors"> 有吃素</span>
+                            </label>
                             <ValidationMessage For="@(() => Customer.IsVegetarian)" />
                         </div>
                     </div>
