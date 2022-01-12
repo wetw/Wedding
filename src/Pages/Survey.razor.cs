@@ -1,8 +1,6 @@
-using System;
 using System.Threading.Tasks;
 using LineDC.Liff;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
@@ -17,16 +15,10 @@ namespace Wedding.Pages
         public EditContext LocalEditContext { get; set; }
         public string ValidationMessage { get; set; }
 
-        [CascadingParameter]
-        private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-
-        private Customer Customer { get; set; }
+        private Customer Customer { get; set; } = new Customer();
 
         [Inject]
         private ICustomerDao CustomerDao { get; init; }
-
-        [Inject]
-        private NavigationManager NavigationManager { get; init; }
 
         [Inject]
         private ILogger<Survey> Logger { get; init; }
@@ -39,64 +31,47 @@ namespace Wedding.Pages
 
         private bool IsFilled { get; set; } = true;
 
-        protected override async Task OnInitializedAsync()
-        {
-            var authenticationState = await AuthenticationStateTask.ConfigureAwait(false);
-            if (authenticationState?.User?.Identity is null
-                || !authenticationState.User.Identity.IsAuthenticated)
-            {
-                var returnUrl = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
-                if (string.IsNullOrWhiteSpace(returnUrl))
-                {
-                    NavigationManager.NavigateTo("api/line/login", true);
-                }
-                NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
-            }
-
-            var customer = authenticationState?.User?.ToCustomer();
-            if (customer is null)
-            {
-                return;
-            }
-
-            // 第一次填寫，或是沒帳號時
-            Customer = await CustomerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false)
-                ?? await CustomerDao.AddAsync(customer).ConfigureAwait(false);
-            if (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime))
-            {
-                IsFilled = false;
-            }
-
-            if (Customer != null && string.IsNullOrWhiteSpace(Customer.RealName))
-            {
-                Customer.RealName = Customer.Name;
-            }
-        }
-
         protected override async Task<Task> OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (!firstRender)
             {
-                try
-                {
-                    if (!Liff.Initialized)
-                    {
-                        await Liff.Init(JSRuntime).ConfigureAwait(false);
-                        if (!await Liff.IsLoggedIn().ConfigureAwait(false))
-                        {
-                            await Liff.Login().ConfigureAwait(false);
-                            return Task.CompletedTask;
-                        }
-                        Liff.Initialized = true;
-                    }
-                }
-                catch (JSDisconnectedException e)
-                {
-                    Logger.LogError(e, "Liff error");
-                }
+                return base.OnAfterRenderAsync(false);
             }
 
-            return base.OnAfterRenderAsync(firstRender);
+            try
+            {
+                if (!Liff.Initialized)
+                {
+                    await Liff.Init(JSRuntime).ConfigureAwait(false);
+                    if (!await Liff.IsLoggedIn().ConfigureAwait(false))
+                    {
+                        await Liff.Login().ConfigureAwait(false);
+                        return Task.CompletedTask;
+                    }
+                    Liff.Initialized = true;
+                    var customer = (await Liff.GetDecodedIDToken().ConfigureAwait(false)).ToCustomer();
+                    // 第一次填寫，或是沒帳號時
+                    Customer = await CustomerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false)
+                               ?? await CustomerDao.AddAsync(customer).ConfigureAwait(false);
+                    if (Customer != null && Customer.CreationTime.Equals(Customer.LastModifyTime))
+                    {
+                        IsFilled = false;
+                    }
+
+                    if (Customer != null && string.IsNullOrWhiteSpace(Customer.RealName))
+                    {
+                        Customer.RealName = Customer.Name;
+                    }
+
+                    await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+                }
+            }
+            catch (JSDisconnectedException e)
+            {
+                Logger.LogError(e, "Liff error");
+            }
+
+            return base.OnAfterRenderAsync(true);
         }
 
         private async Task UpdateAsync()

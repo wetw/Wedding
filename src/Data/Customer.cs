@@ -2,6 +2,7 @@ using SqlSugar;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using LineDC.Liff.Data;
 
 namespace Wedding.Data
 {
@@ -97,6 +98,51 @@ namespace Wedding.Data
                     Name = principal.FindFirstValue(ClaimTypes.Name),
                     Email = principal.FindFirstValue(ClaimTypes.Email) ?? string.Empty,
                     Avatar = principal.FindFirstValue("PictureUrl"),
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static Customer ToCustomer(this Profile profile)
+        {
+            if (profile is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Customer
+                {
+                    LineId = profile.UserId,
+                    Name = profile.DisplayName,
+                    Avatar = profile.PictureUrl
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static Customer ToCustomer(this IdTokenPayload token)
+        {
+            if (token is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Customer
+                {
+                    LineId = token.Sub,
+                    Name = token.Name,
+                    Email = token.Email,
+                    Avatar = token.Picture
                 };
             }
             catch
