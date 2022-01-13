@@ -1,8 +1,7 @@
-using SqlSugar;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using LineDC.Liff.Data;
+using SqlSugar;
 
 namespace Wedding.Data
 {
@@ -81,7 +80,7 @@ namespace Wedding.Data
         其他
     }
 
-    public static class CusomerExtension
+    public static class CustomerExtension
     {
         public static Customer ToCustomer(this ClaimsPrincipal principal)
         {
