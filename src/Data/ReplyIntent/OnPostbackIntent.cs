@@ -9,7 +9,6 @@ namespace Wedding.Data.ReplyIntent
     public class OnPostbackIntent : AbstractReplyIntent
     {
         private readonly IOptionsMonitor<LineBotSetting> _settings;
-        private const string TemplateFolderPath = "IntentMessages/OnPostback";
 
         public OnPostbackIntent(
             ILineMessageUtility lineMessageUtility,
@@ -20,8 +19,8 @@ namespace Wedding.Data.ReplyIntent
         }
 
         public override Task ReplyAsync(LineEvent ev) =>
-            _settings.CurrentValue.PostbackReplyMapping.TryGetValue(ev.postback.data, out var value)
-                ? TryGetTemplateMessageAsync(ev, value, TemplateFolderPath)
+            _settings.CurrentValue.AdvanceReplyMapping.OnPostback.TryGetValue(ev.postback.data, out var value)
+                ? TryGetTemplateMessageAsync(ev, value)
                 : Task.CompletedTask;
     }
 }

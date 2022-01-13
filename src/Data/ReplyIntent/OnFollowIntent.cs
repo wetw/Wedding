@@ -10,7 +10,6 @@ namespace Wedding.Data.ReplyIntent
     public class OnFollowIntent : AbstractReplyIntent
     {
         private readonly IOptionsMonitor<LineBotSetting> _settings;
-        private const string TemplateFolderPath = "IntentMessages/OnFollow";
         public OnFollowIntent(
             ILineMessageUtility lineMessageUtility,
             IFileProvider fileProvider,
@@ -19,17 +18,7 @@ namespace Wedding.Data.ReplyIntent
             _settings = settings;
         }
 
-        public override async Task ReplyAsync(LineEvent ev)
-        {
-            var messages = await GetTemplateMessages(TemplateFolderPath).ConfigureAwait(false);
-
-            if (messages.Count == 0)
-            {
-                var userProfile = await LineMessageUtility.GetUserProfile(ev.source.userId).ConfigureAwait(false);
-                messages.Add(new TextMessage(string.Format(_settings.CurrentValue.OnFollowTextMessage, userProfile.displayName)));
-            }
-
-            await LineMessageUtility.ReplyMessageAsync(ev.replyToken, messages).ConfigureAwait(false);
-        }
+        public override Task ReplyAsync(LineEvent ev) =>
+            TryGetTemplateMessageAsync(ev, _settings.CurrentValue.AdvanceReplyMapping.OnFollow);
     }
 }
