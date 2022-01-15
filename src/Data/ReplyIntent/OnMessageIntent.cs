@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FuzzyString;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using NetCoreLineBotSDK.Interfaces;
@@ -9,32 +11,39 @@ namespace Wedding.Data.ReplyIntent
 {
     public class OnMessageIntent : AbstractReplyIntent
     {
-        private const string TemplateFolderPath = "IntentMessages/OnMessage";
         private readonly IOptionsMonitor<LineBotSetting> _settings;
-
+        private readonly IList<FuzzyStringComparisonOptions> _options;
         public OnMessageIntent(
             ILineMessageUtility lineMessageUtility,
             IFileProvider fileProvider,
             IOptionsMonitor<LineBotSetting> settings) : base(lineMessageUtility, fileProvider)
         {
             _settings = settings;
+            _options = new List<FuzzyStringComparisonOptions>
+            {
+                FuzzyStringComparisonOptions.UseJaccardDistance,
+                FuzzyStringComparisonOptions.UseNormalizedLevenshteinDistance,
+                FuzzyStringComparisonOptions.UseOverlapCoefficient,
+                FuzzyStringComparisonOptions.UseLongestCommonSubsequence,
+                FuzzyStringComparisonOptions.CaseSensitive
+            };
         }
 
         public override Task ReplyAsync(LineEvent ev)
         {
-            var currentMapping = _settings.CurrentValue.AdvanceReplyMapping;
-            if (currentMapping.OnMessage.TryGetValue(ev.message.Text.Trim(), out var replyObject))
+            var replyObjects = _settings.CurrentValue.AdvanceReplyMapping.OnMessage;
+            var text = ev.message.Text.Trim();
+
+            // fuzzy search
+            var key = replyObjects.Keys.FirstOrDefault(x => x.ApproximatelyEquals(text, FuzzyStringComparisonTolerance.Normal, _options.ToArray()));
+            if (key is not null && replyObjects.TryGetValue(key, out var fuzzyReplyObj))
             {
-                return TryGetTemplateMessageAsync(ev, replyObject);
+                return TryGetTemplateMessageAsync(ev, fuzzyReplyObj);
             }
 
-            // If not match, will try to fuzzy search
-            foreach (var result in currentMapping.OnMessage.Where(x => x.Key.Contains(ev.message.Text.Trim())))
-            {
-                return TryGetTemplateMessageAsync(ev, result.Value);
-            }
-
-            return Task.CompletedTask;
+            return replyObjects.TryGetValue("*", out var defaultReplyObj)
+                ? TryGetTemplateMessageAsync(ev, defaultReplyObj)
+                : Task.CompletedTask;
         }
     }
 }
