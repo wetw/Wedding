@@ -22,17 +22,18 @@ namespace Wedding.Data.ReplyIntent
 
         public override Task ReplyAsync(LineEvent ev)
         {
-            if (_settings.CurrentValue.MessageReplyMapping.TryGetValue(ev.message.Text, out var value))
+            var currentMapping = _settings.CurrentValue.AdvanceReplyMapping;
+            if (currentMapping.OnMessage.TryGetValue(ev.message.Text.Trim(), out var replyObject))
             {
-                return TryGetTemplateMessageAsync(ev, value, TemplateFolderPath);
+                return TryGetTemplateMessageAsync(ev, replyObject);
             }
 
             // If not match, will try to fuzzy search
-            foreach (var result in _settings.CurrentValue.MessageReplyMapping
-                .Where(x => ev.message.Text.Contains(x.Key)))
+            foreach (var result in currentMapping.OnMessage.Where(x => x.Key.Contains(ev.message.Text.Trim())))
             {
-                return TryGetTemplateMessageAsync(ev, result.Value, TemplateFolderPath);
+                return TryGetTemplateMessageAsync(ev, result.Value);
             }
+
             return Task.CompletedTask;
         }
     }

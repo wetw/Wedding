@@ -1,6 +1,6 @@
 {
   "type": "text",
-  "text": "?",
+  "text": "hi ${username}, 按下面按鈕可以去 google 搜尋喔 ",
   "QuickReply": {
     "items": [
       {
@@ -8,9 +8,9 @@
         "imageUrl": "https://example.com/sushi.png",
         "action": {
           "$type": "NetCoreLineBotSDK.Models.Action.UriAction, NetCoreLineBotSDK",
-          "uri": "https://weddingsg.blob.core.windows.net/trafficimages/Info1.jpg",
+          "uri": "https://www.google.com/search?q=${username}",
           "type": "uri",
-          "label": "View detail"
+          "label": "Go Google"
         }
       },
       {

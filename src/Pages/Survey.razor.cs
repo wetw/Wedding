@@ -1,4 +1,6 @@
+using System.Threading;
 using System.Threading.Tasks;
+using Blazored.Toast.Services;
 using LineDC.Liff;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -28,6 +30,9 @@ namespace Wedding.Pages
 
         [Inject]
         private ILiffClient Liff { get; init; }
+
+        [Inject]
+        private IToastService ToastService { get; init; }
 
         private bool IsFilled { get; set; } = true;
 
@@ -82,20 +87,30 @@ namespace Wedding.Pages
             {
                 await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
                 Logger.LogInformation($"Updated with: {JsonConvert.SerializeObject(Customer)}");
+                var isInClient = await Liff.IsInClient().ConfigureAwait(false);
+                var isLoggedIn = await Liff.IsLoggedIn().ConfigureAwait(false);
+
                 try
                 {
-                    if (await Liff.IsInClient().ConfigureAwait(false))
+                    if (isInClient && isLoggedIn)
                     {
-                        if (await Liff.IsLoggedIn().ConfigureAwait(false))
-                        {
-                            await Liff.SendMessages(new { type = "text", text = "我填好了" }).ConfigureAwait(false);
-                        }
-                        await Liff.CloseWindow().ConfigureAwait(false);
+                        await Liff.SendMessages(new { type = "text", text = "我填好了" }).ConfigureAwait(false);
                     }
                 }
-                catch (JSDisconnectedException e)
+                catch (JSException e)
                 {
-                    Logger.LogError(e, "Liff Error");
+                    Logger.LogWarning(e, $"{Customer.Name}'s Liff Error");
+                }
+
+                if (isInClient)
+                {
+                    ToastService.ShowSuccess(IsFilled ? "已更新成功，即將關閉視窗" : "填寫成功，即將關閉視窗");
+                    Thread.Sleep(1500);
+                    await Liff.CloseWindow().ConfigureAwait(false);
+                }
+                else
+                {
+                    ToastService.ShowSuccess(IsFilled ? "已更新成功，請關閉視窗" : "填寫成功，請關閉視窗");
                 }
             }
             else

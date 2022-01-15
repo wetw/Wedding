@@ -1,4 +1,6 @@
 @page "/Survey"
+@using ToastPosition = Blazored.Toast.Configuration.ToastPosition
+<link href="_content/Blazored.Toast/blazored-toast.min.css" rel="stylesheet" />
 
 <PageTitle>參加意願調查</PageTitle>
 <div class="@IsMask">
@@ -32,7 +34,7 @@
 
             <div class="form-group form-row">
                 <div class="col-sm-12">
-                    <label class="col-form-label" required for="Phone">連絡電話</label>
+                    <label class="col-form-label" for="Phone">連絡電話</label>
                     <InputText class="form-control"
                                @bind-Value="@Customer.Phone" />
                     <ValidationMessage For="@(() => Customer.Phone)" />
@@ -43,7 +45,7 @@
                 <div class="col-sm-12">
                     <label class="col-form-label" required for="Visitors">與新人的關係</label>
                     <InputSelect class="form-control" @bind-Value="@Customer.Relation">
-                        @foreach (var type in Enum.GetValues(typeof(Wedding.Data.RelationType)))
+                        @foreach (var type in Enum.GetValues(typeof(Data.RelationType)))
                         {
                             <option value="@type">@type</option>
                         }
@@ -154,7 +156,7 @@
             <div class="form-group form-row">
                 @if (IsFilled)
                 {
-                    <button class="btn btn-primary" @onclick="UpdateAsync">更新資料</button>
+                    <button class="btn btn-primary" @onclick="UpdateAsync">更新並送出</button>
                 }
                 else
                 {
@@ -181,3 +183,9 @@
         <div></div>
     </div>
 }
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="10"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug" />

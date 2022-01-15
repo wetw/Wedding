@@ -10,7 +10,7 @@
             <input class="form-control" @bind="_messageInput" placeholder="請輸入您想對我們說的話..." @bind:event="oninput"/>
 
             <div class="button-container">
-                <Button Class="success primary" Disabled="@(string.IsNullOrWhiteSpace(_messageInput) || !IsConnected)" OnClick="Send">Send</Button>
+                <button class="btn btn-primary" disabled="@(string.IsNullOrWhiteSpace(_messageInput) || !IsConnected)"  @onclick="Send">Send</button>
             </div>
             <div class="blessing-block">
                 <div class="blessing-header">

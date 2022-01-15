@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Smart.Blazor;
 using Wedding.Data;
 using Wedding.Services;
 
@@ -19,17 +18,6 @@ namespace Wedding.Pages
 
         [CascadingParameter]
         private Task<AuthenticationState> AuthenticationStateTask { get; init; }
-
-        private readonly TableColumn[] _columns = new TableColumn[]{
-            new () {
-                Label = "Id",
-                DataField = nameof(Customer.Id),
-            },
-            new () {
-                Label = "Name",
-                DataField = nameof(Customer.RealName),
-            }
-        };
 
         private IList<Customer> _customers;
 

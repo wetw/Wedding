@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.FileProviders;
 using NetCoreLineBotSDK.Interfaces;
+using NetCoreLineBotSDK.Models;
 using NetCoreLineBotSDK.Models.LineObject;
 using NetCoreLineBotSDK.Models.Message;
 using Newtonsoft.Json;
@@ -18,6 +19,7 @@ namespace Wedding.Data.ReplyIntent
         private static readonly Regex _templateNamePattern = new(@".+_(?<templateName>[\w]+)\.json");
         private protected static ILineMessageUtility LineMessageUtility;
         private readonly IFileProvider _fileProvider;
+        private const string TemplateFolderPath = "IntentMessages";
 
         protected AbstractReplyIntent(ILineMessageUtility lineMessageUtility, IFileProvider fileProvider)
         {
@@ -33,7 +35,7 @@ namespace Wedding.Data.ReplyIntent
         /// <param name="path"></param>
         /// <param name="filterName"></param>
         /// <returns></returns>
-        protected async Task<List<IRequestMessage>> GetTemplateMessages(string path, string filterName = null)
+        protected async Task<IList<IRequestMessage>> GetTemplateMessages(string path, string filterName = null, UserProfile userProfile = null)
         {
             using var intents = _fileProvider.GetDirectoryContents(path)
                 .Where(x => string.IsNullOrWhiteSpace(filterName) || filterName.Equals(x.Name))
@@ -42,14 +44,18 @@ namespace Wedding.Data.ReplyIntent
 
             while (intents.MoveNext() && intents.Current is { IsDirectory: false })
             {
-                var json = await File.ReadAllTextAsync(intents.Current.PhysicalPath).ConfigureAwait(false);
+                var jsonText = await File.ReadAllTextAsync(intents.Current.PhysicalPath).ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(jsonText) && userProfile is not null)
+                {
+                    jsonText = jsonText.Replace("${username}", userProfile.displayName);
+                }
                 switch (_templateNamePattern.Match(intents.Current.Name).Groups["templateName"].Value)
                 {
                     case nameof(AudioMessage):
-                        messages.Add(JsonConvert.DeserializeObject<AudioMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<AudioMessage>(jsonText));
                         break;
                     case nameof(FlexMessage):
-                        var template = JsonDocument.Parse(json).RootElement.EnumerateObject();
+                        var template = JsonDocument.Parse(jsonText).RootElement.EnumerateObject();
                         var altText = template.FirstOrDefault(c => c.Name.Equals("altText", StringComparison.OrdinalIgnoreCase)).Value.ToString();
                         var contents = template.FirstOrDefault(c => c.Name.Equals("contents", StringComparison.OrdinalIgnoreCase)).Value.ToString();
                         var quickReplyString = template.FirstOrDefault(c => c.Name.Equals("QuickReply", StringComparison.OrdinalIgnoreCase)).Value.ToString();
@@ -57,83 +63,115 @@ namespace Wedding.Data.ReplyIntent
                         messages.Add(new FlexMessage(contents, altText, quickReplay));
                         break;
                     case nameof(ImageMessage):
-                        messages.Add(JsonConvert.DeserializeObject<ImageMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<ImageMessage>(jsonText));
                         break;
                     case nameof(LocationMessage):
-                        messages.Add(JsonConvert.DeserializeObject<LocationMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<LocationMessage>(jsonText));
                         break;
                     case nameof(StickerMessage):
-                        messages.Add(JsonConvert.DeserializeObject<StickerMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<StickerMessage>(jsonText));
                         break;
                     case nameof(TextMessage):
-                        messages.Add(JsonConvert.DeserializeObject<TextMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<TextMessage>(jsonText));
                         break;
                     case nameof(VideoMessage):
-                        messages.Add(JsonConvert.DeserializeObject<VideoMessage>(json));
+                        messages.Add(JsonConvert.DeserializeObject<VideoMessage>(jsonText));
                         break;
                     case nameof(ButtonTemplate):
-                        messages.Add(JsonConvert.DeserializeObject<ButtonTemplate>(json));
+                        messages.Add(JsonConvert.DeserializeObject<ButtonTemplate>(jsonText));
                         break;
                     case nameof(CarouselTemplate):
-                        messages.Add(JsonConvert.DeserializeObject<CarouselTemplate>(json));
+                        messages.Add(JsonConvert.DeserializeObject<CarouselTemplate>(jsonText));
                         break;
                     case nameof(ConfirmTemplate):
-                        messages.Add(JsonConvert.DeserializeObject<ConfirmTemplate>(json));
+                        messages.Add(JsonConvert.DeserializeObject<ConfirmTemplate>(jsonText));
                         break;
                     case nameof(ImageCarouselTemplate):
-                        messages.Add(JsonConvert.DeserializeObject<ImageCarouselTemplate>(json));
+                        messages.Add(JsonConvert.DeserializeObject<ImageCarouselTemplate>(jsonText));
                         break;
                 }
             }
 
-            return messages;
+            return messages.Any() ? messages : new List<IRequestMessage> { new TextMessage(filterName) };
         }
 
         /// <summary>
         /// 嘗試拿訊息樣板，沒拿到時會回傳文字
         /// </summary>
-        /// <param name="ev"></param>
-        /// <param name="value">可傳入多筆樣板，藉由 ; 來分隔</param>
-        /// <param name="templateFolderPath"></param>
+        /// <param name="ev" cref="LineEvent"></param>
+        /// <param name="replyObject" cref="ReplyObject"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        protected async Task TryGetTemplateMessageAsync(LineEvent ev, string value, string templateFolderPath)
+        protected async Task TryGetTemplateMessageAsync(LineEvent ev, ReplyObject replyObject)
         {
             if (ev == null)
             {
                 throw new ArgumentNullException(nameof(ev));
             }
 
-            if (value == null)
+            if (replyObject == null)
             {
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(replyObject));
             }
 
-            if (templateFolderPath == null)
-            {
-                throw new ArgumentNullException(nameof(templateFolderPath));
-            }
-
+            var userProfile = await LineMessageUtility.GetUserProfile(ev.source.userId).ConfigureAwait(false);
 
             var messages = new List<IRequestMessage>();
-            foreach (var item in value.Split(';'))
+            switch (replyObject.Type)
             {
-                if (item.StartsWith("Intent_") && item.EndsWith(".json"))
-                {
-                    // Intent_*_StickerMessage.json mean try get template from folder(templateFolderPath).
-                    var template = await GetTemplateMessages(templateFolderPath, item).ConfigureAwait(false);
-                    if (template?.Any() == true)
+                case ReplyType.Continue:
                     {
-                        messages.AddRange(template);
+                        foreach (var item in replyObject.Templates)
+                        {
+                            var template = await GetTemplateMessages(TemplateFolderPath, item, userProfile).ConfigureAwait(false);
+                            if (template?.Any() == true && messages.Count < 6)
+                            {
+                                messages.AddRange(template);
+                            }
+                        }
+
+                        break;
                     }
-                }
+                case ReplyType.Random:
+                    {
+                        var templates = replyObject.Templates.GetRandomSelection(replyObject.RandomNum);
+                        foreach (var item in templates)
+                        {
+                            var template = await GetTemplateMessages(TemplateFolderPath, item, userProfile).ConfigureAwait(false);
+                            if (template?.Any() == true && messages.Count < 6)
+                            {
+                                messages.AddRange(template);
+                            }
+                        }
+
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             // if template file not found, will return text message.
             await LineMessageUtility.ReplyMessageAsync(ev.replyToken,
                 messages.Count > 0 ? messages
-                    : new List<IRequestMessage> { new TextMessage(value) }).ConfigureAwait(false);
-            await LineMessageUtility.ReplyMessageAsync(ev.replyToken, value).ConfigureAwait(false);
+                    : new List<IRequestMessage> { new TextMessage(string.Join(',', replyObject.Templates)) }).ConfigureAwait(false);
+        }
+    }
+
+    public static class Extensions
+    {
+        public static IEnumerable<T> GetRandomSelection<T>(this IEnumerable<T> array, int count = 1)
+        {
+            var maxLength = array.Count();
+
+            var randomSelection = new List<T>();
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var randomInterval = random.Next(0, maxLength);
+                randomSelection.Add(array.ElementAt(randomInterval));
+            }
+
+            return randomSelection;
         }
     }
 }

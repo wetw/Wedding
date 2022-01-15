@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazored.Toast;
 using LineDC.Liff;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -24,7 +25,6 @@ using SendGrid;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Email;
-using Smart.Blazor;
 using SqlSugar;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
@@ -76,7 +76,7 @@ namespace Wedding
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
-            services.AddSmart();
+            services.AddBlazoredToast();
             services.AddResponseCompression(opts =>
             {
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
@@ -224,6 +224,7 @@ namespace Wedding
             services.AddSingleton<OnFollowIntent>();
             services.AddSingleton<OnMessageIntent>();
             services.AddSingleton<OnPostbackIntent>();
+
             services.AddScoped<ILiffClient>(_ => new LiffClient(Configuration.GetValue("Liff:ClientId", string.Empty)));
         }
 
