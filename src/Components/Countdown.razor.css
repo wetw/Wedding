@@ -1,2 +1,8 @@
-﻿.digit {
+.digit {
+}
+
+.tittle {
+  font-family: 'Great Vibes', cursive;
+  text-transform: initial;
+  color: #FFF;
 }
