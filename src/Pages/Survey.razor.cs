@@ -36,7 +36,9 @@ namespace Wedding.Pages
 
         private bool IsFilled { get; set; } = true;
 
-        private  bool IsUpdating { get; set; }
+        private bool IsUpdating { get; set; }
+
+        private string IsShowMask => string.IsNullOrWhiteSpace(Customer?.LineId) ? "mask" : null;
 
         protected override async Task<Task> OnAfterRenderAsync(bool firstRender)
         {
