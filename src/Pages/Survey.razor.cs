@@ -36,7 +36,7 @@ namespace Wedding.Pages
 
         private bool IsFilled { get; set; } = true;
 
-        private string IsMask => string.IsNullOrWhiteSpace(Customer?.LineId) ? "mask" : null;
+        private  bool IsUpdating { get; set; }
 
         protected override async Task<Task> OnAfterRenderAsync(bool firstRender)
         {
@@ -92,6 +92,8 @@ namespace Wedding.Pages
 
                 try
                 {
+                    IsUpdating = true;
+                    await InvokeAsync(StateHasChanged).ConfigureAwait(false);
                     if (isInClient && isLoggedIn)
                     {
                         await Liff.SendMessages(new { type = "text", text = "我填好了" }).ConfigureAwait(false);
@@ -101,11 +103,15 @@ namespace Wedding.Pages
                 {
                     Logger.LogWarning(e, $"{Customer.Name}'s Liff Error");
                 }
+                finally
+                {
+                    IsUpdating = false;
+                    await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+                }
 
                 if (isInClient)
                 {
                     ToastService.ShowSuccess(IsFilled ? "已更新成功，即將關閉視窗" : "填寫成功，即將關閉視窗");
-                    Thread.Sleep(1500);
                     await Liff.CloseWindow().ConfigureAwait(false);
                 }
                 else

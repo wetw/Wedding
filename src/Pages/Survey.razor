@@ -3,164 +3,141 @@
 <link href="_content/Blazored.Toast/blazored-toast.min.css" rel="stylesheet" />
 
 <PageTitle>參加意願調查</PageTitle>
-<div class="@IsMask">
+<div class="wrapper">
     <EditForm Model="@Customer">
         <DataAnnotationsValidator />
 
         <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
 
         <div class="input-form">
-            <div class="form-group form-row">
-                <img src="@Customer.Avatar" alt="" class="avatar" />
+            <div class="title-line">
+                <div class="title">基本資訊</div>
             </div>
 
             <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label class="col-form-label" required for="Name">姓名</label>
-                    <InputText class="form-control"
-                               @bind-Value="@Customer.RealName" />
-                    <ValidationMessage For="@(() => Customer.RealName)" />
-                </div>
+                <label class="col-form-label" required for="Name">姓名</label>
+                <InputText class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
+                           @bind-Value="@Customer.RealName" />
+                <ValidationMessage For="@(() => Customer.RealName)" />
             </div>
 
             <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label class="col-form-label" required for="Email">Email</label>
-                    <InputText class="form-control"
-                               @bind-Value="@Customer.Email" />
-                    <ValidationMessage For="@(() => Customer.Email)" />
-                </div>
+                <label class="col-form-label" required for="Email">Email</label>
+                <InputText class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
+                           @bind-Value="@Customer.Email" />
+                <ValidationMessage For="@(() => Customer.Email)" />
             </div>
 
             <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label class="col-form-label" for="Phone">連絡電話</label>
-                    <InputText class="form-control"
-                               @bind-Value="@Customer.Phone" />
-                    <ValidationMessage For="@(() => Customer.Phone)" />
-                </div>
+                <label class="col-form-label" for="Phone">連絡電話</label>
+                <InputText class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
+                           @bind-Value="@Customer.Phone" />
+                <ValidationMessage For="@(() => Customer.Phone)" />
             </div>
 
             <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label class="col-form-label" required for="Visitors">與新人的關係</label>
-                    <InputSelect class="form-control" @bind-Value="@Customer.Relation">
-                        @foreach (var type in Enum.GetValues(typeof(Data.RelationType)))
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => Customer.Relation)" />
-                </div>
+                <label class="col-form-label" required for="Visitors">與新人的關係</label>
+                <InputSelect class="form-control" @bind-Value="@Customer.Relation" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;">
+                    @foreach (var type in Enum.GetValues(typeof(Data.RelationType)))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => Customer.Relation)" />
+
+            </div>
+
+            <div class="title-line">
+                <div class="title">喜帖需求</div>
             </div>
 
             <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label>
-                        <InputCheckbox @bind-Value="@Customer.IsEmailBook" />
-                        <span for="Visitors"> 是否需要電子喜帖</span>
-                    </label>
-                    <ValidationMessage For="@(() => Customer.IsEmailBook)" />
-                </div>
-            </div>
-
-            <div class="form-group form-row">
-                <div class="col-sm-12">
-                    <label>
-                        <InputCheckbox @bind-Value="@Customer.IsRealBook" />
-                        <span for="Visitors"> 是否需要實體喜帖</span>
-                    </label>
-                    <ValidationMessage For="@(() => Customer.IsRealBook)" />
-                </div>
+                <label>
+                    <InputCheckbox @bind-Value="@Customer.IsEmailBook" />
+                    <span for="Visitors">電子喜帖</span>
+                </label>
+                <ValidationMessage For="@(() => Customer.IsEmailBook)" />
+                <label>
+                    <InputCheckbox @bind-Value="@Customer.IsRealBook" />
+                    <span for="Visitors">實體喜帖</span>
+                </label>
+                <ValidationMessage For="@(() => Customer.IsRealBook)" />
             </div>
 
             @if (Customer.IsRealBook)
             {
                 <div class="form-group form-row">
-                    <div class="col-sm-3">
-                        <label class="col-form-label" for="Visitors">郵遞區號</label>
-                        <InputText class="form-control" @bind-Value="@Customer.PostCode" />
-                        <ValidationMessage For="@(() => Customer.PostCode)" />
-                    </div>
+                    <label class="col-form-label" for="Visitors">郵遞區號</label>
+                    <InputText class="form-control" @bind-Value="@Customer.PostCode" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;" />
+                    <ValidationMessage For="@(() => Customer.PostCode)" />
                 </div>
                 <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" for="Visitors">地址</label>
-                        <InputText class="form-control" @bind-Value="@Customer.Address" />
-                        <ValidationMessage For="@(() => Customer.Address)" />
-                    </div>
+                    <label class="col-form-label" for="Visitors">地址</label>
+                    <InputText class="form-control" @bind-Value="@Customer.Address" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;" />
+                    <ValidationMessage For="@(() => Customer.Address)" />
                 </div>
             }
 
+            <div class="title-line">
+                <div class="title">出席調查</div>
+            </div>
+
             <div class="form-group form-row">
-                <div class="col-sm-12" style="display: grid;">
-                    <label class="col-form-label" for="IsAttend">是否出席</label>
-                    <InputRadioGroup Name="IsAttend" @bind-Value="Customer.IsAttend">
-                        <label><InputRadio Name="IsAttend" Value="true" /> 絕對出席!</label>
-                        <label><InputRadio Name="IsAttend" Value="false" /> 無法出席，但心意滿滿!</label>
-                    </InputRadioGroup>
-                    <ValidationMessage For="@(() => Customer.IsAttend)" />
-                </div>
+                <InputRadioGroup Name="IsAttend" @bind-Value="Customer.IsAttend">
+                    <label><InputRadio Name="IsAttend" Value="true" /> 絕對出席!</label>
+                    <label><InputRadio Name="IsAttend" Value="false" /> 無法出席，但心意滿滿!</label>
+                </InputRadioGroup>
+                <ValidationMessage For="@(() => Customer.IsAttend)" />
             </div>
 
             @if (Customer.IsAttend is true)
             {
                 <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Visitors">幾位大人</label>
-                        <InputNumber class="form-control"
-                                 @bind-Value="@Customer.Visitors" />
-                        <ValidationMessage For="@(() => Customer.Visitors)" />
-                    </div>
+                    <label class="col-form-label" required for="Visitors">幾位大人</label>
+                    <InputNumber class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
+                             @bind-Value="@Customer.Visitors" />
+                    <ValidationMessage For="@(() => Customer.Visitors)" />
                 </div>
 
                 <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label class="col-form-label" required for="Visitors">幾個兒童椅</label>
-                        <InputNumber class="form-control"
-                                 @bind-Value="@Customer.ChildrenCount" />
-                        <ValidationMessage For="@(() => Customer.ChildrenCount)" />
-                    </div>
+                    <label class="col-form-label" required for="Visitors">幾個兒童椅</label>
+                    <InputNumber class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
+                             @bind-Value="@Customer.ChildrenCount" />
+                    <ValidationMessage For="@(() => Customer.ChildrenCount)" />
                 </div>
 
                 <div class="form-group form-row">
-                    <div class="col-sm-12">
-                        <label>
-                            <InputCheckbox @bind-Value="@Customer.IsVegetarian" />
-                            <span for="Visitors"> 有吃素</span>
-                        </label>
-                        <ValidationMessage For="@(() => Customer.IsVegetarian)" />
-                    </div>
+                    <label>
+                        <InputCheckbox @bind-Value="@Customer.IsVegetarian" />
+                        <span for="Visitors"> 有吃素</span>
+                    </label>
+                    <ValidationMessage For="@(() => Customer.IsVegetarian)" />
                 </div>
 
                 @if (Customer.IsVegetarian)
                 {
                     <div class="form-group form-row">
-                        <div class="col-sm-12">
-                            <label class="col-form-label" for="Visitors">幾個人吃素</label>
-                            <InputNumber class="form-control"
-                                 @bind-Value="@Customer.VegetarianCount" />
-                            <ValidationMessage For="@(() => Customer.VegetarianCount)" />
-                        </div>
+                        <label class="col-form-label" for="Visitors">幾個人吃素</label>
+                        <InputNumber class="form-control"
+                             @bind-Value="@Customer.VegetarianCount" />
+                        <ValidationMessage For="@(() => Customer.VegetarianCount)" />
                     </div>
                 }
             }
 
             <div class="form-group form-row" style="display: grid;">
-                <div class="col-sm-12">
-                    <label class="col-form-label" for="Message">有甚麼話想要和我們說的嗎</label>
-                    <InputTextArea class="col-form-label" style="width: 100%;" rows="4" @bind-Value="Customer.Message" />
-                </div>
+                <label class="col-form-label" for="Message">有甚麼話想要和我們說的嗎</label>
+                <InputTextArea class="col-form-label" style="width: 100%; border: 1px solid #CCC; border-radius: 4px;" rows="4" @bind-Value="Customer.Message" />
             </div>
 
             <div class="form-group form-row">
                 @if (IsFilled)
                 {
-                    <button class="btn btn-primary" @onclick="UpdateAsync">更新並送出</button>
+                    <button class="btn btn-primary" disabled="@IsUpdating" @onclick="UpdateAsync">更新並送出</button>
                 }
                 else
                 {
-                    <button class="btn btn-primary" @onclick="UpdateAsync">填好了</button>
+                    <button class="btn btn-primary" disabled="@IsUpdating" @onclick="UpdateAsync">填好了</button>
                 }
             </div>
 
