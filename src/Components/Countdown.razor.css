@@ -6,3 +6,7 @@
   text-transform: initial;
   color: #FFF;
 }
+
+#counter {
+  backdrop-filter: blur(10px);
+}
