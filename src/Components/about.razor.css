@@ -1,0 +1,28 @@
+div .about {
+  background: url(https://cdn.wedding.weiting.me/images/AN8_1502.jpg) no-repeat bottom;
+}
+
+.title {
+  color: #FFF;
+}
+
+.white-shadow2 {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+  .white-shadow2:hover {
+    background: rgb(0 0 0 / 50%);
+  }
+
+.footer_grid_left h1, p {
+  color: #000;
+  font-weight: 400;
+}
+
+.footer_grid_left p {
+  font-size: 20px;
+}
+
+.map-grid {
+  border-color: rgba(255, 255, 255, 0.4);
+}
