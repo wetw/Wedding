@@ -218,7 +218,7 @@ namespace Wedding
                  };
             services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
             services.AddLineBotSDK(Configuration);
-            services.AddSingleton<LineBotApp, WeddingLineBotApp>();
+            services.AddScoped<LineBotApp, WeddingLineBotApp>();
             // Intent
             services.AddSingleton<OnBeaconIntent>();
             services.AddSingleton<OnFollowIntent>();

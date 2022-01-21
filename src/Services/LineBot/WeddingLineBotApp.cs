@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using NetCoreLineBotSDK;
@@ -16,6 +17,7 @@ namespace Wedding.Services.LineBot
         private readonly OnFollowIntent _onFollowIntent;
         private readonly OnMessageIntent _onMessageIntent;
         private readonly OnPostbackIntent _onPostbackIntent;
+        private readonly ICustomerDao _customerDao;
 
         public WeddingLineBotApp(
             ILineMessageUtility lineMessageUtility,
@@ -23,13 +25,15 @@ namespace Wedding.Services.LineBot
             OnBeaconIntent onBeaconIntent,
             OnFollowIntent onFollowIntent,
             OnMessageIntent onMessageIntent,
-            OnPostbackIntent onPostbackIntent) : base(lineMessageUtility)
+            OnPostbackIntent onPostbackIntent,
+            ICustomerDao customerDao) : base(lineMessageUtility)
         {
             _settings = settings;
             _onBeaconIntent = onBeaconIntent;
             _onFollowIntent = onFollowIntent;
             _onMessageIntent = onMessageIntent;
             _onPostbackIntent = onPostbackIntent;
+            _customerDao = customerDao;
         }
 
         protected override async Task OnFollowAsync(LineEvent ev)
@@ -37,15 +41,62 @@ namespace Wedding.Services.LineBot
             await _onFollowIntent.ReplyAsync(ev).ConfigureAwait(false);
         }
 
-        protected override Task OnMessageAsync(LineEvent ev) =>
-            ev.message.Type == LineMessageType.Text
-                ? _onMessageIntent.ReplyAsync(ev)
-                : Task.CompletedTask;
+        protected override async Task OnMessageAsync(LineEvent ev)
+        {
+            if (ev.message.Type != LineMessageType.Text)
+            {
+                return;
+            }
+
+            // HACK: 先暫時寫死，後續改為參數方式
+            if (_settings.CurrentValue.CustomerMessage.AttendMessage.Enabled && ev.message.Text.Equals("我填好了"))
+            {
+                if (await _customerDao.GetByLineIdAsync(ev.source.userId).ConfigureAwait(false) is { } user)
+                {
+                    ev.postback = new PostBack();
+                    switch (user.IsAttend)
+                    {
+                        case null:
+                            ev.postback.data = "尚未填寫";
+                            await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                            break;
+                        default:
+                            {
+                                if (user.IsAttend.Value)
+                                {
+                                    ev.postback.data = "我要參加";
+                                    await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                                }
+                                else if (!user.IsAttend.Value)
+                                {
+                                    ev.postback.data = "我不能參加";
+                                    await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                                }
+                                break;
+                            }
+                    }
+                }
+            }
+            else
+            {
+                await _onMessageIntent.ReplyAsync(ev).ConfigureAwait(false);
+            }
+        }
 
         protected override Task OnBeaconAsync(LineEvent ev)
         {
             if (_settings.CurrentValue.Beacon.Enabled && ev.beacon.type == BeaconType.Enter)
             {
+                //var messageConfig = _settings.CurrentValue.CustomerMessage.WelcomeMessage;
+                //if (messageConfig.Enabled 
+                //    && DateTime.UtcNow.TimeOfDay > messageConfig.WelcomeBeforeUtcTime)
+                //{
+                //    if (messageConfig.EnabledDaily)
+                //    {
+
+                //    }
+
+                //}
                 return _onBeaconIntent.ReplyAsync(ev);
             }
 

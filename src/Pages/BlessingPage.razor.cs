@@ -50,7 +50,7 @@ namespace Wedding.Pages
             }
             _customer = authenticationState?.User.ToCustomer();
             _blessingList = await BlessingDao.GetListAsync(_customer.LineId, pageSize: _showBlessingCount).ConfigureAwait(false);
-            _blessingTotalCount= await BlessingDao.Countsync(_customer.LineId).ConfigureAwait(false);
+            _blessingTotalCount= await BlessingDao.CountAsync(_customer.LineId).ConfigureAwait(false);
         }
 
         public bool IsConnected =>

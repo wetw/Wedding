@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SqlSugar;
 using Wedding.Data;
 
@@ -9,7 +10,7 @@ namespace Wedding.Services
     {
         public BlessingDao() : base(null) { }
 
-        public BlessingDao(ConnectionConfig config) : base(config) { }
+        public BlessingDao(IOptions<ConnectionConfig> config) : base(config) { }
 
         public new Task<Blessing> AddAsync(Blessing blessing)
         {
@@ -17,7 +18,7 @@ namespace Wedding.Services
             return base.AddAsync(blessing);
         }
 
-        public async Task<int> Countsync(string lineId)
+        public async Task<int> CountAsync(string lineId)
         {
             RefAsync<int> total = 0;
             _ = await _db.Queryable<Blessing>()
