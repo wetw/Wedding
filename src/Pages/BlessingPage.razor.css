@@ -10,16 +10,14 @@ smart-button.icon > button {
   align-items: center;
 }
 
-input {
-  width: 80vw !important;
-  margin: 0 10vw;
+input::placeholder {
+  color: gray !important;
 }
 
-  input::placeholder {
-    color: gray !important;
-  }
-
 .input-form {
+  width: 550px;
+  margin: 0 auto;
+  max-width: 90%;
   padding-top: 5vh;
   position: relative;
 }
@@ -30,7 +28,8 @@ input {
 
 .input-header {
   height: 100vh;
-  background-image: url(https://cdnweddingweb.azureedge.net/images/AN8_1070.jpg);
+  background: url(https://cdn.wedding.weiting.me/linemessage/blessing-bg.png) no-repeat;
+  background-size: cover;
   top: 0;
   position: absolute;
   left: 0;
@@ -40,20 +39,21 @@ input {
 
 .blessing-block {
   min-height: 165px;
-  background-color: rgba(80,80,80,0.2);
-  width: 80vw;
-  padding-top: 10px;
-  margin: 0 10vw;
+  background-color: rgba(255,255,255,0.7);
+  padding: 12px 24px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 18px;
-  font-weight: bolder;
-  text-shadow: -0.1px -0.1px 0 #fff, -0.1px 0.1px 0 #fff;
+  border-radius: 8px;
+  color: #555;
 }
 
 .blessing-header {
   text-align: center;
+  font-weight: bold;
+  color: #555;
+  margin: 8px 0;
 }
 
-.blessing-messgae {
-  text-align: center;
+.blessing-message > div {
+  margin: 8px 0;
 }
