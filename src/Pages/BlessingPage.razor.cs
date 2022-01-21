@@ -22,9 +22,7 @@ namespace Wedding.Pages
         private HubConnection _hubConnection;
         private string _messageInput = "";
         private int _blessingTotalCount = 0;
-        private IEnumerable<Blessing> _blessingList = Array.Empty<Blessing>();
         private Customer _customer;
-        private int _showBlessingCount = 5;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -49,7 +47,6 @@ namespace Wedding.Pages
                 NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
             }
             _customer = authenticationState?.User.ToCustomer();
-            _blessingList = await BlessingDao.GetListAsync(_customer.LineId, pageSize: _showBlessingCount).ConfigureAwait(false);
             _blessingTotalCount= await BlessingDao.CountAsync(_customer.LineId).ConfigureAwait(false);
         }
 
@@ -78,7 +75,6 @@ namespace Wedding.Pages
                     Message = _messageInput
                 };
                 await BlessingDao.AddAsync(blessing).ConfigureAwait(false);
-                _blessingList = _blessingList.Prepend(blessing).Take(_showBlessingCount);
                 _blessingTotalCount++;
             }
             finally
