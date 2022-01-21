@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SqlSugar;
 using Wedding.Data;
 
@@ -10,16 +11,17 @@ namespace Wedding.Services
     {
         protected readonly SqlSugarClient _db;
 
-        protected SqlSugarBaseDao(ConnectionConfig config)
+        protected SqlSugarBaseDao(IOptions<ConnectionConfig> config)
         {
-            config ??= new ConnectionConfig
+            var currentConfig = config?.Value;
+            currentConfig ??= new ConnectionConfig
             {
                 ConnectionString = "DataSource=.\\db.sqlite;",
                 DbType = DbType.Sqlite,
                 IsAutoCloseConnection = true,
                 InitKeyType = InitKeyType.Attribute
             };
-            _db = new SqlSugarClient(config);
+            _db = new SqlSugarClient(currentConfig);
             _db.CodeFirst.InitTables<Customer>();
             _db.CodeFirst.InitTables<Blessing>();
         }

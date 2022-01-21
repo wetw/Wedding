@@ -8,7 +8,7 @@ namespace Wedding.Services
     {
         Task<IList<Blessing>> GetListAsync(string lineId, int pageIndex = 1, int pageSize = 10);
 
-        Task<int> Countsync(string lineId);
+        Task<int> CountAsync(string lineId);
 
         Task<Blessing> AddAsync(Blessing blessing);
     }

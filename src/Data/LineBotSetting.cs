@@ -1,5 +1,6 @@
+using System;
 using System.Collections.Generic;
-using Google.Protobuf.WellKnownTypes;
+
 
 namespace Wedding.Data
 {
@@ -11,13 +12,9 @@ namespace Wedding.Data
 
         public string ClientSecret { get; init; }
 
-        public Dictionary<string, string> MessageReplyMapping { get; init; }
-
-        public Dictionary<string, string> PostbackReplyMapping { get; init; }
-
         public AdvanceReplyMapping AdvanceReplyMapping { get; init; }
 
-        public string OnFollowTextMessage { get; init; }
+        public CustomerMessage CustomerMessage { get; init; }
     }
 
     public partial class Beacon
@@ -27,6 +24,27 @@ namespace Wedding.Data
         public bool EnabledAlwaysSendTextMessage { get; init; }
 
         public string OnBeaconTextMessage { get; init; }
+    }
+
+    public partial class CustomerMessage
+    {
+        public AttendMessage AttendMessage { get; init; }
+
+        public WelcomeMessage WelcomeMessage { get; init; }
+    }
+
+    public partial class WelcomeMessage
+    {
+        public bool Enabled { get; init; }
+
+        public bool EnabledDaily { get; init; }
+
+        public TimeSpan WelcomeBeforeUtcTime { get; init; }
+    }
+
+    public partial class AttendMessage
+    {
+        public bool Enabled { get; init; }
     }
 
     public class AdvanceReplyMapping

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SqlSugar;
 using Wedding.Data;
 
@@ -9,7 +10,7 @@ namespace Wedding.Services
     {
         public CustomerDao() : base(null) { }
 
-        public CustomerDao(ConnectionConfig config) : base(config) { }
+        public CustomerDao(IOptions<ConnectionConfig> config) : base(config) { }
 
         public Task<Customer> GetByLineIdAsync(string lineId)
         {
