@@ -83,8 +83,8 @@ namespace Wedding
                     new[] { "application/octet-stream" });
             });
             services.AddSingleton<CountDownService>();
-            services.AddScoped<ICustomerDao, CustomerDao>();
-            services.AddScoped<IBlessingDao, BlessingDao>();
+            services.AddSingleton<ICustomerDao, CustomerDao>();
+            services.AddSingleton<IBlessingDao, BlessingDao>();
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -218,7 +218,7 @@ namespace Wedding
                  };
             services.Configure<LineBotSetting>(Configuration.GetSection(nameof(LineBotSetting)));
             services.AddLineBotSDK(Configuration);
-            services.AddScoped<LineBotApp, WeddingLineBotApp>();
+            services.AddSingleton<LineBotApp, WeddingLineBotApp>();
             // Intent
             services.AddSingleton<OnBeaconIntent>();
             services.AddSingleton<OnFollowIntent>();

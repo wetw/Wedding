@@ -1,6 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GridCore.Server;
+using GridShared;
+using GridShared.Utility;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using SqlSugar;
 using Wedding.Data;
 
@@ -33,7 +39,32 @@ namespace Wedding.Services
         public async Task<IList<Customer>> GetListAsync(int pageIndex = 1, int pageSize = 10)
         {
             RefAsync<int> total = 0;
-            return await _db.Queryable<Customer>().ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+            return pageSize < 1
+                ? await _db.Queryable<Customer>().ToListAsync().ConfigureAwait(false)
+                : await _db.Queryable<Customer>().ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
+        }
+
+        public ItemsDTO<Customer> GetGridRowsAsync(
+            Action<IGridColumnCollection<Customer>> columns,
+            QueryDictionary<StringValues> query)
+        {
+            var list = GetListAsync(1, 0).ConfigureAwait(false).GetAwaiter().GetResult();
+            var server = new GridCoreServer<Customer>(list, new QueryCollection(query),
+                true, "customersGrid", columns)
+                .Sortable()
+                .WithPaging(10)
+                .Filterable()
+                .Groupable(true)
+                .WithGridItemsCount()
+                .Searchable(true, true)
+                .WithMultipleFilters();
+
+            // return items to displays
+            return server.ItemsToDisplay;
         }
     }
 }

@@ -1,31 +1,17 @@
 @page "/Manage"
+@using Wedding.Data
+
+<link href="_content/GridBlazor/css/gridblazor.min.css" rel="stylesheet" />
+<link href="_content/GridBlazor/css/gridblazor-bootstrap3.min.css" rel="stylesheet" />
 
 <AuthorizeView Roles="Admin">
     <Authorized>
         <h3>ManagePage</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>LineId</th>
-                    <th>Name</th>
-                    <th>Attend</th>
-                    <th>LastModifyTime</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var customer in _customers)
-                {
-                    <tr>
-                        <td>@customer.Id</td>
-                        <td>@customer.LineId</td>
-                        <td>@customer.RealName</td>
-                        <td>@customer.IsAttend</td>
-                        <td>@customer.LastModifyTime</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-md-12">
+                <GridComponent T="Customer" Grid="@_grid" ></GridComponent>
+            </div>
+        </div>
     </Authorized>
     <NotAuthorized>
         <h1>Authentication Failure!</h1>
@@ -33,3 +19,8 @@
     </NotAuthorized>
 </AuthorizeView>
 
+<style>
+    .IsAttendNull {
+        background-color: #ff000061 !important;
+    }
+</style>
