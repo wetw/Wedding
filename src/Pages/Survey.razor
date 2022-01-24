@@ -5,9 +5,7 @@
 <PageTitle>參加意願調查</PageTitle>
 <div class="wrapper @IsShowMask">
     <EditForm Model="@Customer">
-        <DataAnnotationsValidator />
-
-        <InputWatcher EditContextActionChanged="@OnEditContestChanged" />
+        <FluentValidator Validator="_validator"></FluentValidator>
 
         <div class="input-form">
             <div class="title-line">
@@ -22,7 +20,7 @@
             </div>
 
             <div class="form-group form-row">
-                <label class="col-form-label" required for="Email">Email</label>
+                <label class="col-form-label" required=@Customer.IsEmailBook for="Email">Email</label>
                 <InputText class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
                            @bind-Value="@Customer.Email" />
                 <ValidationMessage For="@(() => Customer.Email)" />
@@ -38,6 +36,7 @@
             <div class="form-group form-row">
                 <label class="col-form-label" required for="Visitors">與新人的關係</label>
                 <InputSelect class="form-control" @bind-Value="@Customer.Relation" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;">
+                    <option value="-1"></option>
                     @foreach (var type in Enum.GetValues(typeof(Data.RelationType)))
                     {
                         <option value="@type">@type</option>
@@ -72,7 +71,7 @@
                     <ValidationMessage For="@(() => Customer.PostCode)" />
                 </div>
                 <div class="form-group form-row">
-                    <label class="col-form-label" for="Visitors">地址</label>
+                    <label class="col-form-label" required=@Customer.IsRealBook for="Visitors">地址</label>
                     <InputText class="form-control" @bind-Value="@Customer.Address" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;" />
                     <ValidationMessage For="@(() => Customer.Address)" />
                 </div>
@@ -93,14 +92,14 @@
             @if (Customer.IsAttend is true)
             {
                 <div class="form-group form-row">
-                    <label class="col-form-label" required for="Visitors">幾位大人</label>
+                    <label class="col-form-label" required=@Customer.IsAttend for="Visitors">幾位大人</label>
                     <InputNumber class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
                              @bind-Value="@Customer.Visitors" />
                     <ValidationMessage For="@(() => Customer.Visitors)" />
                 </div>
 
                 <div class="form-group form-row">
-                    <label class="col-form-label" required for="Visitors">幾個兒童椅</label>
+                    <label class="col-form-label" required=@Customer.IsAttend for="Visitors">幾個兒童椅</label>
                     <InputNumber class="form-control" style="box-shadow: none; -webkit-box-shadow: none; height: 40px;"
                              @bind-Value="@Customer.ChildrenCount" />
                     <ValidationMessage For="@(() => Customer.ChildrenCount)" />
@@ -117,7 +116,7 @@
                 @if (Customer.IsVegetarian)
                 {
                     <div class="form-group form-row">
-                        <label class="col-form-label" for="Visitors">幾個人吃素</label>
+                        <label class="col-form-label" required=@Customer.IsVegetarian for="Visitors">幾個人吃素</label>
                         <InputNumber class="form-control"
                              @bind-Value="@Customer.VegetarianCount" />
                         <ValidationMessage For="@(() => Customer.VegetarianCount)" />
@@ -139,10 +138,6 @@
                 {
                     <button class="btn btn-primary" disabled="@IsUpdating" @onclick="UpdateAsync">填好了</button>
                 }
-            </div>
-
-            <div class="display-4 text-secondary">
-                @ValidationMessage
             </div>
         </div>
     </EditForm>

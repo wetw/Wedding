@@ -35,12 +35,13 @@ namespace Wedding.Data
         public bool? IsAttend { get; set; } = null;
 
         [Range(0, 10)]
-        public int Visitors { get; set; } = 1;
+        public int Visitors { get; set; }
 
         [Range(0, 10)]
         public int ChildrenCount { get; set; }
 
-        public RelationType Relation { get; set; }
+        [SugarColumn(IsNullable = true)]
+        public RelationType? Relation { get; set; } = null;
 
         public bool IsRealBook { get; set; }
 

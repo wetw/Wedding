@@ -1,9 +1,7 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LineDC.Liff;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
@@ -14,9 +12,6 @@ namespace Wedding.Pages
 {
     public partial class Survey
     {
-        public EditContext LocalEditContext { get; set; }
-        public string ValidationMessage { get; set; }
-
         private Customer Customer { get; set; } = new Customer();
 
         [Inject]
@@ -39,6 +34,8 @@ namespace Wedding.Pages
         private bool IsUpdating { get; set; }
 
         private string IsShowMask => string.IsNullOrWhiteSpace(Customer?.LineId) ? "mask" : null;
+
+        private readonly CustomerValidator _validator = new();
 
         protected override async Task<Task> OnAfterRenderAsync(bool firstRender)
         {
@@ -85,7 +82,8 @@ namespace Wedding.Pages
 
         private async Task UpdateAsync()
         {
-            if (LocalEditContext.Validate())
+            var result = await _validator.ValidateAsync(Customer).ConfigureAwait(false);
+            if (result.IsValid)
             {
                 await CustomerDao.UpdateAsync(Customer, Customer.LineId).ConfigureAwait(false);
                 Logger.LogInformation($"Updated with: {JsonConvert.SerializeObject(Customer)}");
@@ -123,13 +121,8 @@ namespace Wedding.Pages
             }
             else
             {
-                ValidationMessage = "資料有錯，請重新修正";
+                ToastService.ShowWarning("資料填寫有誤，請修正唷");
             }
-        }
-
-        private void OnEditContestChanged(EditContext context)
-        {
-            LocalEditContext = context;
         }
     }
 }

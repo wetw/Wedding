@@ -39,6 +39,7 @@ namespace Wedding.Pages
             c.Add(x => x.ChildrenCount).Titled("小孩人數").Sum(true);
             c.Add(x => x.VegetarianCount).Titled("吃素人數").Sum(true);
             c.Add(x => x.LastModifyTime).Titled("最後更新時間").SetFilterWidgetType("DateTimeLocal");
+            c.Add(x => x.Message).Titled("對我們說的話");
         }
 
         protected override async Task OnInitializedAsync()
