@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.Toast;
+using FluentValidation;
 using LineDC.Liff;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -73,6 +74,7 @@ namespace Wedding
             services.Configure<WeddingOptions>(Configuration.GetSection(nameof(WeddingOptions)));
             services.Configure<ConnectionConfig>(Configuration.GetSection(nameof(ConnectionConfig)));
             AddLineServices(services);
+            services.AddValidatorsFromAssemblyContaining<Startup>();
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();
