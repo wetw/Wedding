@@ -27,6 +27,8 @@ namespace Wedding.Pages
         {
             c.Add(x => x.Id);
             c.Add(x => x.IsAttend).Titled("參加");
+            c.Add(x => x.Avatar).Encoded(false).Sanitized(false).SetExcelHidden(true)
+                .RenderValueAs(x => $"<img style='width: 50px; height: 50px; border-radius: 50%; background-position: top center;' src='{x.Avatar}' />");
             c.Add(x => x.Name).Titled("Line 名稱");
             c.Add(x => x.RealName).Titled("名稱");
             c.Add(x => x.Relation).Titled("關係");
