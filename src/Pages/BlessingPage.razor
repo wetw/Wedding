@@ -5,18 +5,53 @@
 
 <AuthorizeView>
     <Authorized Context="auth">
-        <div class="input-header"></div>
-        <div class="input-form">
-            <input class="form-control" @bind="_messageInput" placeholder="請輸入您想對我們說的話..." @bind:event="oninput"/>
-
-            <div class="button-container">
-                <button class="btn btn-primary" disabled="@(string.IsNullOrWhiteSpace(_messageInput) || !IsConnected)"  @onclick="Send">Send</button>
+        <div class="input-header">
+            <div class="input-form">
+                <input class="form-control" placeholder="請輸入您想對我們說的話..." @bind:event="oninput" />
+                <div class="button-container">
+                    <button class="btn btn-primary" disabled="@(string.IsNullOrWhiteSpace(_messageInput) || !IsConnected)" @onclick="Send">Send</button>
+                </div>
             </div>
-            <div class="blessing-block">
-                <div class="blessing-header">
-                    <span>我們有收到您 @_blessingTotalCount 次祝福囉!</span>
+            <div class="blessing-wrapper">
+                <div class="bubble-wrapper">
+                    @if (_blessingTotalCount > 0)
+                    {
+                        <div class="blessing-bubble">我們收到您 @_blessingTotalCount 次祝福囉！</div>
+                    }
+                    else
+                    {
+                        <div class="blessing-bubble">和我們說些甚麼吧！</div>
+                    }
+                </div>
+                <div class="avatar-wrapper">
+                    <img class="avatar-flower1" src="https://cdn.wedding.weiting.me/linemessage/flower1.png"/>
+                    <img class="avatar-both" src="https://cdn.wedding.weiting.me/linemessage/both-avatar.png"/>
+                    <img class="avatar-flower2" src="https://cdn.wedding.weiting.me/linemessage/flower2.png"/>
                 </div>
             </div>
         </div>
     </Authorized>
 </AuthorizeView>
+
+<style>
+    .form-control {
+        height: auto;
+        padding: 10px 16px;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #F7CDD1;
+        border-radius: 4px;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+        .form-control:focus {
+            border-color: #EE7A73;
+            outline: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+</style>
