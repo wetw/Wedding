@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -26,11 +23,14 @@ namespace Wedding.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(NavigationManager.ToAbsoluteUri("/photoHub"))
-                .WithAutomaticReconnect()
-                .Build();
-            await _hubConnection.StartAsync();
+            if (firstRender)
+            {
+                _hubConnection = new HubConnectionBuilder()
+                    .WithUrl(NavigationManager.ToAbsoluteUri("/photoHub"))
+                    .WithAutomaticReconnect()
+                    .Build();
+                await _hubConnection.StartAsync();
+            }
         }
 
         protected override async Task OnInitializedAsync()
@@ -47,7 +47,7 @@ namespace Wedding.Pages
                 NavigationManager.NavigateTo($"/api/line/login?returnUrl={returnUrl}", true);
             }
             _customer = authenticationState?.User.ToCustomer();
-            _blessingTotalCount= await BlessingDao.CountAsync(_customer.LineId).ConfigureAwait(false);
+            _blessingTotalCount = await BlessingDao.CountAsync(_customer.LineId).ConfigureAwait(false);
         }
 
         public bool IsConnected =>

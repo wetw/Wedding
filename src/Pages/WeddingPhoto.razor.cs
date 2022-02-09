@@ -22,27 +22,13 @@ namespace Wedding.Pages
 
         private IReadOnlyCollection<object> _dataSource;
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
             var random = new Random();
-
             _dataSource = Options.CurrentValue.WeddingPhotos
                 .Select(x => (object)new { image = x })
                 .OrderBy(e => random.Next())
                 .ToList();
-
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(NavigationManager.ToAbsoluteUri("/photoHub"))
-                .WithAutomaticReconnect()
-                .Build();
-            _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-            {
-                var encodedMsg = $"{user}: {message}";
-                _messages.Add(encodedMsg);
-                StateHasChanged();
-            });
-
-            await _hubConnection.StartAsync();
         }
 
         public async ValueTask DisposeAsync()
@@ -50,6 +36,25 @@ namespace Wedding.Pages
             if (_hubConnection is not null)
             {
                 await _hubConnection.DisposeAsync();
+            }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _hubConnection = new HubConnectionBuilder()
+                    .WithUrl(NavigationManager.ToAbsoluteUri("/photoHub"))
+                    .WithAutomaticReconnect()
+                    .Build();
+                _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+                {
+                    var encodedMsg = $"{user}: {message}";
+                    _messages.Add(encodedMsg);
+                    StateHasChanged();
+                });
+                await _hubConnection.StartAsync();
+                await _hubConnection.SendAsync("Subscribe").ConfigureAwait(false);
             }
         }
     }
