@@ -25,6 +25,7 @@ using SendGrid;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Email;
+using Smart.Blazor;
 using SqlSugar;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
@@ -75,6 +76,7 @@ namespace Wedding
             services.Configure<ConnectionConfig>(Configuration.GetSection(nameof(ConnectionConfig)));
             AddLineServices(services);
             services.AddValidatorsFromAssemblyContaining<Startup>();
+            services.AddSmart();
             services.AddRazorPages();
             services.AddControllers();
             services.AddServerSideBlazor();

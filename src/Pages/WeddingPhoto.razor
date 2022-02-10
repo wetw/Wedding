@@ -1,33 +1,25 @@
 @page "/WeddingPhoto"
+@inject IJSRuntime JS
+
+<link href="_content/Smart.Blazor/css/smart.default.css" rel="stylesheet" />
+
 <style>
     smart-carousel {
         width: 100%;
         height: 100vh;
     }
 
-    smart-carousel .smart-carousel-item .smart-carousel-item-container {
-        background-size: contain !important;
-    }
+        smart-carousel .smart-carousel-item .smart-carousel-item-container {
+            background-size: contain !important;
+        }
 
-    smart-carousel:not([animation=none]) .smart-carousel-item, body {
-        background-color: gainsboro;
-    }
-
-    marquee {
-        font-size: 40px;
-        position: absolute;
-        z-index: 2;
-        bottom: 0;
-        text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-    }
-
+        smart-carousel:not([animation=none]) .smart-carousel-item, body {
+            background-color: gainsboro;
+        }
 </style>
 <div class="card h-auto">
+    <div id="BulletScreensDiv" style="height: 1000px; width: 100%; position: absolute; z-index: 2"></div>
     <div class="card-body">
         <Carousel Class="slide" DataSource="@_dataSource" AutoPlay SlideShow HideArrows HideIndicators Loop></Carousel>
     </div>
-    @foreach (var message in _messages)
-    {
-        <marquee><strong>@message</strong></marquee>
-    }
 </div>

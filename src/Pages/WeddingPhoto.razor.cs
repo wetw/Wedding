@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using Wedding.Data;
 
 namespace Wedding.Pages
@@ -21,6 +22,7 @@ namespace Wedding.Pages
         private readonly IList<string> _messages = new List<string>();
 
         private IReadOnlyCollection<object> _dataSource;
+        int _startTime = 5000;
 
         protected override void OnInitialized()
         {
@@ -47,15 +49,17 @@ namespace Wedding.Pages
                     .WithUrl(NavigationManager.ToAbsoluteUri("/photoHub"))
                     .WithAutomaticReconnect()
                     .Build();
-                _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+                _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
                 {
                     var encodedMsg = $"{user}: {message}";
-                    _messages.Add(encodedMsg);
-                    StateHasChanged();
+                    await JS.InvokeVoidAsync("AddBulletScreen", encodedMsg, _startTime).ConfigureAwait(false);
+                    _startTime += new Random().Next(0, 300) + encodedMsg.Length * 3;
                 });
                 await _hubConnection.StartAsync();
                 await _hubConnection.SendAsync("Subscribe").ConfigureAwait(false);
             }
+
+            await JS.InvokeVoidAsync("SetBulletScreen").ConfigureAwait(false);
         }
     }
 }
