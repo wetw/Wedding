@@ -9,7 +9,7 @@ using Wedding.Data;
 
 namespace Wedding.Pages
 {
-    public partial class WeddingPhoto
+    public partial class WeddingPhoto : IAsyncDisposable
     {
         [Inject]
         private IOptionsMonitor<WeddingOptions> Options { get; init; }
