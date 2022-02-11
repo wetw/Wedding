@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -7,7 +8,7 @@ using Wedding.Services;
 
 namespace Wedding.Pages
 {
-    public partial class BlessingPage
+    public partial class BlessingPage : IAsyncDisposable
     {
         [Inject]
         protected IBlessingDao BlessingDao { get; init; }
