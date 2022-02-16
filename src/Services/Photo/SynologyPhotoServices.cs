@@ -20,33 +20,30 @@ public class SynologyPhotoServices : IPhotoServices
     private static readonly string ContentType = "Content-Type";
     private static readonly string ContentDisposition = "Content-Disposition";
     private readonly ILineMessageUtility _lineMessageUtility;
-    private readonly Uri _baseAddress;
     private readonly string _sharingId;
+    private readonly HttpClient _httpClient;
 
     public SynologyPhotoServices(
         ILineMessageUtility lineMessageUtility,
-        IOptionsMonitor<LineBotSetting> settings)
+        IOptionsMonitor<LineBotSetting> settings,
+        HttpClient httpClient)
     {
         _lineMessageUtility = lineMessageUtility;
         var mathchs = new Regex(@"^(?<host>\S+)/sharing/(?<sharingId>\S+)").Match(settings.CurrentValue.UploadImage.ShareUrl);
         if (mathchs.Groups.TryGetValue("host", out var host))
         {
-            _baseAddress = new Uri(host.Value);
+            httpClient.BaseAddress = new Uri(host.Value);
         }
         if (mathchs.Groups.TryGetValue("sharingId", out var sharingId))
         {
             _sharingId = sharingId.Value;
         }
+        _httpClient = httpClient;
     }
 
     public async Task Upload(string messageId, string userId, string defaultExtension)
     {
         var username = (await _lineMessageUtility.GetUserProfile(userId).ConfigureAwait(false)).displayName;
-        using var httpClient = new HttpClient
-        {
-            BaseAddress = _baseAddress
-        };
-        await httpClient.GetAsync($"/sharing/{_sharingId}").ConfigureAwait(false);
         var sharingIdContent = new StringContent(_sharingId, Encoding.UTF8);
         sharingIdContent.Headers.Remove(ContentType);
         var usernameContent = new StringContent(username, Encoding.UTF8);
@@ -68,7 +65,8 @@ public class SynologyPhotoServices : IPhotoServices
         //  RFC 2046 format
         var boundaryValue = content.Headers.ContentType.Parameters.Single(p => p.Name == "boundary");
         boundaryValue.Value = boundaryValue.Value.Replace("\"", string.Empty);
-        var response = await httpClient.PostAsync(
+        await _httpClient.GetAsync($"/sharing/{_sharingId}").ConfigureAwait(false);
+        var response = await _httpClient.PostAsync(
             $"/webapi/entry.cgi?api=SYNO.FileStation.Upload&method=upload&version=2&_sharing_id={_sharingId}", content).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
     }

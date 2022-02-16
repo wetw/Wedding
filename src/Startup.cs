@@ -226,7 +226,7 @@ namespace Wedding
             services.AddSingleton<OnFollowIntent>();
             services.AddSingleton<OnMessageIntent>();
             services.AddSingleton<OnPostbackIntent>();
-            services.AddSingleton<IPhotoServices, SynologyPhotoServices>();
+            services.AddHttpClient<IPhotoServices, SynologyPhotoServices>();
             services.AddScoped<ILiffClient>(_ => new LiffClient(Configuration.GetValue("Liff:ClientId", string.Empty)));
         }
 
