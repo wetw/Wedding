@@ -93,6 +93,11 @@ namespace Wedding.Services.LineBot
                 case LineMessageType.Sticker:
                 case LineMessageType.Imagemap:
                 case LineMessageType.Video:
+                    if (_settings.CurrentValue.UploadImage.Enabled && !string.IsNullOrEmpty(_settings.CurrentValue.UploadImage.ShareUrl))
+                    {
+                        await _photoServices.UploadVideo(ev.message.Id, ev.source.userId).ConfigureAwait(false);
+                    }
+                    break;
                 case LineMessageType.Audio:
                 case LineMessageType.Template:
                 case LineMessageType.Flex:
