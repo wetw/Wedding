@@ -7,6 +7,7 @@ using NetCoreLineBotSDK.Interfaces;
 using NetCoreLineBotSDK.Models.LineObject;
 using Wedding.Data;
 using Wedding.Data.ReplyIntent;
+using Wedding.Services.Photo;
 
 namespace Wedding.Services.LineBot
 {
@@ -18,6 +19,7 @@ namespace Wedding.Services.LineBot
         private readonly OnMessageIntent _onMessageIntent;
         private readonly OnPostbackIntent _onPostbackIntent;
         private readonly ICustomerDao _customerDao;
+        private readonly IPhotoServices _photoServices;
 
         public WeddingLineBotApp(
             ILineMessageUtility lineMessageUtility,
@@ -26,7 +28,8 @@ namespace Wedding.Services.LineBot
             OnFollowIntent onFollowIntent,
             OnMessageIntent onMessageIntent,
             OnPostbackIntent onPostbackIntent,
-            ICustomerDao customerDao) : base(lineMessageUtility)
+            ICustomerDao customerDao,
+            IPhotoServices photoServices) : base(lineMessageUtility)
         {
             _settings = settings;
             _onBeaconIntent = onBeaconIntent;
@@ -34,6 +37,7 @@ namespace Wedding.Services.LineBot
             _onMessageIntent = onMessageIntent;
             _onPostbackIntent = onPostbackIntent;
             _customerDao = customerDao;
+            _photoServices = photoServices;
         }
 
         protected override async Task OnFollowAsync(LineEvent ev)
@@ -43,44 +47,60 @@ namespace Wedding.Services.LineBot
 
         protected override async Task OnMessageAsync(LineEvent ev)
         {
-            if (ev.message.Type != LineMessageType.Text)
+            switch (ev.message.Type)
             {
-                return;
+                case LineMessageType.Text:
+                    // HACK: 先暫時寫死，後續改為參數方式
+                    if (_settings.CurrentValue.CustomerMessage.AttendMessage.Enabled && ev.message.Text.Equals("我填好了"))
+                    {
+                        if (await _customerDao.GetByLineIdAsync(ev.source.userId).ConfigureAwait(false) is { } user)
+                        {
+                            ev.postback = new PostBack();
+                            switch (user.IsAttend)
+                            {
+                                case null:
+                                    ev.postback.data = "尚未填寫";
+                                    await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                                    break;
+                                default:
+                                    {
+                                        if (user.IsAttend.Value)
+                                        {
+                                            ev.postback.data = "我要參加";
+                                            await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                                        }
+                                        else if (!user.IsAttend.Value)
+                                        {
+                                            ev.postback.data = "我不能參加";
+                                            await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                                        }
+                                        break;
+                                    }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await _onMessageIntent.ReplyAsync(ev).ConfigureAwait(false);
+                    }
+                    break;
+                case LineMessageType.Image:
+                    if (_settings.CurrentValue.UploadImage.Enabled && !string.IsNullOrEmpty(_settings.CurrentValue.UploadImage.ShareUrl))
+                    {
+                        await _photoServices.UploadImage(ev.message.Id, ev.source.userId).ConfigureAwait(false);
+                    }
+                    break;
+                case LineMessageType.Sticker:
+                case LineMessageType.Imagemap:
+                case LineMessageType.Video:
+                case LineMessageType.Audio:
+                case LineMessageType.Template:
+                case LineMessageType.Flex:
+                case LineMessageType.Location:
+                default:
+                    return;
             }
 
-            // HACK: 先暫時寫死，後續改為參數方式
-            if (_settings.CurrentValue.CustomerMessage.AttendMessage.Enabled && ev.message.Text.Equals("我填好了"))
-            {
-                if (await _customerDao.GetByLineIdAsync(ev.source.userId).ConfigureAwait(false) is { } user)
-                {
-                    ev.postback = new PostBack();
-                    switch (user.IsAttend)
-                    {
-                        case null:
-                            ev.postback.data = "尚未填寫";
-                            await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
-                            break;
-                        default:
-                            {
-                                if (user.IsAttend.Value)
-                                {
-                                    ev.postback.data = "我要參加";
-                                    await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
-                                }
-                                else if (!user.IsAttend.Value)
-                                {
-                                    ev.postback.data = "我不能參加";
-                                    await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
-                                }
-                                break;
-                            }
-                    }
-                }
-            }
-            else
-            {
-                await _onMessageIntent.ReplyAsync(ev).ConfigureAwait(false);
-            }
         }
 
         protected override Task OnBeaconAsync(LineEvent ev)

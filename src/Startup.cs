@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Blazored.Toast;
@@ -32,6 +31,7 @@ using Wedding.Data.ReplyIntent;
 using Wedding.Hubs;
 using Wedding.Services;
 using Wedding.Services.LineBot;
+using Wedding.Services.Photo;
 
 namespace Wedding
 {
@@ -226,7 +226,7 @@ namespace Wedding
             services.AddSingleton<OnFollowIntent>();
             services.AddSingleton<OnMessageIntent>();
             services.AddSingleton<OnPostbackIntent>();
-
+            services.AddSingleton<IPhotoServices, SynologyPhotoServices>();
             services.AddScoped<ILiffClient>(_ => new LiffClient(Configuration.GetValue("Liff:ClientId", string.Empty)));
         }
 

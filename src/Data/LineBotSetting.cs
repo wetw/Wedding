@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-
 namespace Wedding.Data
 {
     public partial class LineBotSetting
@@ -15,6 +14,8 @@ namespace Wedding.Data
         public AdvanceReplyMapping AdvanceReplyMapping { get; init; }
 
         public CustomerMessage CustomerMessage { get; init; }
+
+        public UploadImage UploadImage { get; init; }
     }
 
     public partial class Beacon
@@ -65,5 +66,12 @@ namespace Wedding.Data
         public int RandomNum { get; init; } = 1;
 
         public IEnumerable<string> Templates { get; init; }
+    }
+
+    public class UploadImage
+    {
+        public bool Enabled { get; init; }
+
+        public string ShareUrl { get; init; }
     }
 }
