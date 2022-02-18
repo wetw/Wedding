@@ -22,9 +22,9 @@ namespace Wedding.Data
     {
         public bool Enabled { get; init; }
 
-        public bool EnabledAlwaysSendTextMessage { get; init; }
+        public string EnterHwid { get; init; }
 
-        public string OnBeaconTextMessage { get; init; }
+        public string LeaveHwid { get; init; }
     }
 
     public partial class CustomerMessage

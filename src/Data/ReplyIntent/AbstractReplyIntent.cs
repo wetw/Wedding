@@ -45,10 +45,7 @@ namespace Wedding.Data.ReplyIntent
             while (intents.MoveNext() && intents.Current is { IsDirectory: false })
             {
                 var jsonText = await File.ReadAllTextAsync(intents.Current.PhysicalPath).ConfigureAwait(false);
-                if (!string.IsNullOrWhiteSpace(jsonText) && userProfile is not null)
-                {
-                    jsonText = jsonText.Replace("${username}", userProfile.displayName);
-                }
+                jsonText = LineUserNameFormat(jsonText, userProfile);
                 switch (_templateNamePattern.Match(intents.Current.Name).Groups["templateName"].Value)
                 {
                     case nameof(AudioMessage):
@@ -92,7 +89,7 @@ namespace Wedding.Data.ReplyIntent
                 }
             }
 
-            return messages.Any() ? messages : new List<IRequestMessage> { new TextMessage(filterName) };
+            return messages.Any() ? messages : new List<IRequestMessage> { new TextMessage(LineUserNameFormat(filterName, userProfile)) };
         }
 
         /// <summary>
@@ -154,6 +151,16 @@ namespace Wedding.Data.ReplyIntent
             await LineMessageUtility.ReplyMessageAsync(ev.replyToken,
                 messages.Count > 0 ? messages
                     : new List<IRequestMessage> { new TextMessage(string.Join(',', replyObject.Templates)) }).ConfigureAwait(false);
+        }
+
+        private static string LineUserNameFormat(string jsonText, UserProfile userProfile = null)
+        {
+            if (!string.IsNullOrWhiteSpace(jsonText) && userProfile is not null)
+            {
+                jsonText = jsonText.Replace("${username}", userProfile.displayName);
+            }
+
+            return jsonText;
         }
     }
 
