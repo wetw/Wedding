@@ -14,25 +14,24 @@ namespace Wedding.Services.LineBot
     public class WeddingLineBotApp : LineBotApp
     {
         private readonly IOptionsMonitor<LineBotSetting> _settings;
-        private readonly OnBeaconIntent _onBeaconIntent;
         private readonly OnFollowIntent _onFollowIntent;
         private readonly OnMessageIntent _onMessageIntent;
         private readonly OnPostbackIntent _onPostbackIntent;
         private readonly ICustomerDao _customerDao;
         private readonly IPhotoServices _photoServices;
+        private readonly ILineMessageUtility _lineMessageUtility;
 
         public WeddingLineBotApp(
             ILineMessageUtility lineMessageUtility,
             IOptionsMonitor<LineBotSetting> settings,
-            OnBeaconIntent onBeaconIntent,
             OnFollowIntent onFollowIntent,
             OnMessageIntent onMessageIntent,
             OnPostbackIntent onPostbackIntent,
             ICustomerDao customerDao,
             IPhotoServices photoServices) : base(lineMessageUtility)
         {
+            _lineMessageUtility = lineMessageUtility;
             _settings = settings;
-            _onBeaconIntent = onBeaconIntent;
             _onFollowIntent = onFollowIntent;
             _onMessageIntent = onMessageIntent;
             _onPostbackIntent = onPostbackIntent;
@@ -44,6 +43,10 @@ namespace Wedding.Services.LineBot
         {
             await _onFollowIntent.ReplyAsync(ev).ConfigureAwait(false);
         }
+
+
+        protected override Task OnPostbackAsync(LineEvent ev) =>
+            _onPostbackIntent.ReplyAsync(ev);
 
         protected override async Task OnMessageAsync(LineEvent ev)
         {
@@ -108,27 +111,87 @@ namespace Wedding.Services.LineBot
 
         }
 
-        protected override Task OnBeaconAsync(LineEvent ev)
+        protected override async Task OnBeaconAsync(LineEvent ev)
         {
-            if (_settings.CurrentValue.Beacon.Enabled && ev.beacon.type == BeaconType.Enter)
+            if (_settings.CurrentValue.Beacon.Enabled
+                && ev.beacon.type == BeaconType.Enter)
             {
-                //var messageConfig = _settings.CurrentValue.CustomerMessage.WelcomeMessage;
-                //if (messageConfig.Enabled 
-                //    && DateTime.UtcNow.TimeOfDay > messageConfig.WelcomeBeforeUtcTime)
-                //{
-                //    if (messageConfig.EnabledDaily)
-                //    {
+                if (string.IsNullOrWhiteSpace(_settings.CurrentValue.Beacon.EnterHwid)
+                    || _settings.CurrentValue.Beacon.EnterHwid.Equals(ev.beacon.hwid, StringComparison.OrdinalIgnoreCase))
+                {
+                    await BeaconEnterReply(ev).ConfigureAwait(false);
+                    return;
+                }
 
-                //    }
-
-                //}
-                return _onBeaconIntent.ReplyAsync(ev);
+                if (string.IsNullOrWhiteSpace(_settings.CurrentValue.Beacon.LeaveHwid)
+                       || _settings.CurrentValue.Beacon.LeaveHwid.Equals(ev.beacon.hwid, StringComparison.OrdinalIgnoreCase))
+                {
+                    await BeaconLeaveReply(ev).ConfigureAwait(false);
+                }
             }
-
-            return Task.CompletedTask;
         }
 
-        protected override Task OnPostbackAsync(LineEvent ev) =>
-            _onPostbackIntent.ReplyAsync(ev);
+        private async Task BeaconEnterReply(LineEvent ev)
+        {
+            var user = await GetUserAndTryAdd(ev).ConfigureAwait(false);
+            if (user.IsSignIn)
+            {
+                return;
+            }
+
+            try
+            {
+                ev.postback = new PostBack();
+                switch (user!.Table)
+                {
+                    case null:
+                    case "":
+                        ev.postback.data = "沒填寫問券的";
+                        await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                        break;
+                    default:
+                        ev.postback.data = $"桌號{user.Table}";
+                        await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+                        break;
+                }
+            }
+            finally
+            {
+                user.IsSignIn = true;
+                await _customerDao.UpdateAsync(user, user.LineId).ConfigureAwait(false);
+            }
+        }
+
+        private async Task BeaconLeaveReply(LineEvent ev)
+        {
+            var user = await GetUserAndTryAdd(ev).ConfigureAwait(false);
+            if (user.IsLeave)
+            {
+                return;
+            }
+
+            try
+            {
+                ev.postback = new PostBack { data = "離開的感謝提醒" };
+                await _onPostbackIntent.ReplyAsync(ev).ConfigureAwait(false);
+            }
+            finally
+            {
+                user.IsLeave = true;
+                await _customerDao.UpdateAsync(user, user.LineId).ConfigureAwait(false);
+            }
+        }
+
+        private async Task<Customer> GetUserAndTryAdd(LineEvent ev)
+        {
+            var user = await _customerDao.GetByLineIdAsync(ev.source.userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                var userProfile = (await _lineMessageUtility.GetUserProfile(ev.source.userId).ConfigureAwait(false))
+                    .ToCustomer();
+                user = await _customerDao.AddAsync(userProfile).ConfigureAwait(false);
+            }
+            return user;
+        }
     }
 }

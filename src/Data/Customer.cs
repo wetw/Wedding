@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using LineDC.Liff.Data;
+using NetCoreLineBotSDK.Models;
 using SqlSugar;
 
 namespace Wedding.Data
@@ -64,6 +65,10 @@ namespace Wedding.Data
 
         [SugarColumn(IsNullable = true)]
         public string Message { get; set; }
+
+        public bool IsSignIn { get; set; }
+
+        public bool IsLeave { get; set; }
     }
 
     public enum RelationType
@@ -120,6 +125,28 @@ namespace Wedding.Data
                     LineId = profile.UserId,
                     Name = profile.DisplayName,
                     Avatar = profile.PictureUrl
+                };
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static Customer ToCustomer(this UserProfile profile)
+        {
+            if (profile is null)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Customer
+                {
+                    LineId = profile.userId,
+                    Name = profile.displayName,
+                    Avatar = profile.pictureUrl
                 };
             }
             catch
