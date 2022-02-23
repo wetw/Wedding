@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet" />
     <link href="fullpage.css" rel="stylesheet" />
     <script src="fullpage.js"></script>
+    <script src="openBSE.all.min.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="_content/GridBlazor/js/gridblazor.js"></script>
     <link href="Wedding.styles.css" rel="stylesheet" />
@@ -53,5 +54,18 @@
             </script>
         </environment>
     </div>
+    <script>
+        SetBulletScreen =  () => {
+            window.bulletScreenEngine  = new openBSE.GeneralEngine(document.getElementById('BulletScreensDiv'));
+            window.bulletScreenEngine.play();
+        }
+        AddBulletScreen = (text, startTime) => {
+            window.bulletScreenEngine.add({
+                text: text,
+                startTime: startTime,
+                canDiscard: true
+            });
+        }
+    </script>
 </body>
 </html>

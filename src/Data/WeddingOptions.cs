@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Wedding.Data
@@ -17,6 +17,6 @@ namespace Wedding.Data
 
         public string InvitationDescription { get; init; }
 
-        public IReadOnlyCollection<string> WeddingPhotos { get; init; }
+        public string WeddingVideoSrc { get; init; }
     }
 }
