@@ -5,6 +5,7 @@ using GridShared.Utility;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Primitives;
+using Wedding.Components;
 using Wedding.Data;
 using Wedding.Services;
 
@@ -73,7 +74,9 @@ namespace Wedding.Pages
                 .SetStriped(true)
                 .WithGridItemsCount()
                 .SetExcelExport(true, false, "Customers")
-                .Searchable(true, false, true);
+                .Searchable(true, false, true)
+                .SetUpdateComponent<CusomterUpdateComponent>()
+                .SetCrudButtonLabels("Add", "View", "Edit", "Delete");
             _grid = client.Grid;
 
             // Set new items to grid
