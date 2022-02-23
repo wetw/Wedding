@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -19,18 +17,11 @@ namespace Wedding.Pages
         private NavigationManager NavigationManager { get; init; }
 
         private HubConnection _hubConnection;
-        private readonly IList<string> _messages = new List<string>();
-
-        private IReadOnlyCollection<object> _dataSource;
-        int _startTime = 5000;
+        private string _videoSrc;
 
         protected override void OnInitialized()
         {
-            var random = new Random();
-            _dataSource = Options.CurrentValue.WeddingPhotos
-                .Select(x => (object)new { image = x })
-                .OrderBy(e => random.Next())
-                .ToList();
+            _videoSrc = Options.CurrentValue.WeddingVideoSrc;
         }
 
         public async ValueTask DisposeAsync()
@@ -52,10 +43,9 @@ namespace Wedding.Pages
                 _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
                 {
                     var encodedMsg = $"{user}: {message}";
-                    await JS.InvokeVoidAsync("AddBulletScreen", encodedMsg, _startTime).ConfigureAwait(false);
-                    _startTime += new Random().Next(0, 300) + encodedMsg.Length * 3;
+                    await JS.InvokeVoidAsync("AddBulletScreen", encodedMsg).ConfigureAwait(false);
                 });
-                await _hubConnection.StartAsync();
+                await _hubConnection.StartAsync().ConfigureAwait(false);
                 await _hubConnection.SendAsync("Subscribe").ConfigureAwait(false);
             }
 
