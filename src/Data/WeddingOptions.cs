@@ -18,5 +18,7 @@ namespace Wedding.Data
         public string InvitationDescription { get; init; }
 
         public string WeddingVideoSrc { get; init; }
+
+        public float BulletScaling { get; init; }
     }
 }

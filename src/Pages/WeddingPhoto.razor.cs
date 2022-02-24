@@ -18,10 +18,12 @@ namespace Wedding.Pages
 
         private HubConnection _hubConnection;
         private string _videoSrc;
+        private float _scaling;
 
         protected override void OnInitialized()
         {
             _videoSrc = Options.CurrentValue.WeddingVideoSrc;
+            _scaling = Options.CurrentValue.WeddingScaling;
         }
 
         public async ValueTask DisposeAsync()
@@ -49,7 +51,7 @@ namespace Wedding.Pages
                 await _hubConnection.SendAsync("Subscribe").ConfigureAwait(false);
             }
 
-            await JS.InvokeVoidAsync("SetBulletScreen").ConfigureAwait(false);
+            await JS.InvokeVoidAsync("SetBulletScreen", _scaling).ConfigureAwait(false);
         }
     }
 }
