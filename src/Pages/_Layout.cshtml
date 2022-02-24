@@ -55,8 +55,8 @@
         </environment>
     </div>
     <script>
-        SetBulletScreen =  () => {
-            window.bulletScreenEngine  = new openBSE.GeneralEngine(document.getElementById('BulletScreensDiv'));
+        SetBulletScreen = (scaling) => {
+            window.bulletScreenEngine = new openBSE.GeneralEngine(document.getElementById('BulletScreensDiv'), { scaling });
             window.bulletScreenEngine.play();
         }
         AddBulletScreen = (text, startTime) => {
