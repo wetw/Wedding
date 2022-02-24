@@ -23,7 +23,7 @@ namespace Wedding.Pages
         protected override void OnInitialized()
         {
             _videoSrc = Options.CurrentValue.WeddingVideoSrc;
-            _scaling = Options.CurrentValue.WeddingScaling;
+            _scaling = Options.CurrentValue.BulletScaling;
         }
 
         public async ValueTask DisposeAsync()
