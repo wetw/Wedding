@@ -6,10 +6,12 @@ namespace Wedding.Services
 {
     public interface IBlessingDao
     {
-        Task<IList<Blessing>> GetListAsync(string lineId, int pageIndex = 1, int pageSize = 10);
+        Task<IEnumerable<Blessing>> GetListAsync(string lineId = null, int pageIndex = 1, int pageSize = 10);
 
         Task<int> CountAsync(string lineId);
 
         Task<Blessing> AddAsync(Blessing blessing);
+
+        Task<Blessing> GetAsync(int id);
     }
 }
