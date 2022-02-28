@@ -62,10 +62,10 @@
         AddBulletScreen = (text, startTime) => {
             window.bulletScreenEngine.add({
                 text: text,
-                startTime: startTime,
-                canDiscard: true
+                startTime: window.bulletScreenEngine.options.clock() + startTime
             });
         }
+        GetBulletCount = () => window.bulletScreenEngine.debugInfo.bufferBulletScreenCount;
     </script>
 </body>
 </html>

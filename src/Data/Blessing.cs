@@ -14,5 +14,8 @@ namespace Wedding.Data
 
         [Required]
         public string LineId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
     }
 }

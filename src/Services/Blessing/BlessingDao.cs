@@ -36,10 +36,13 @@ namespace Wedding.Services
                 pageIndex = 1;
             }
             RefAsync<int> total = 0;
-            return await _db.Queryable<Blessing>()
+            var blessingQueryable = _db.Queryable<Blessing>()
                 .Where(x => string.IsNullOrWhiteSpace(lineId) || x.LineId == lineId)
-                .OrderBy(x => x.CreationTime, OrderByType.Desc)
-                .ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
+                .OrderBy(x => x.CreationTime, OrderByType.Desc);
+
+            return pageSize == 0
+                ? await blessingQueryable.ToListAsync().ConfigureAwait(false)
+                : await blessingQueryable.ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
         }
     }
 }

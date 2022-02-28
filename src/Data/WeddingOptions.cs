@@ -26,5 +26,7 @@ namespace Wedding.Data
         public bool PushMessageToLuckyMan { get; init; }
 
         public string RandomKey { get; init; } = "123456";
+
+        public int PhotoBlessingScannerTime { get; init; } = 1000;
     }
 }
