@@ -2,471 +2,201 @@ body {
   margin: 0;
 }
 
-img {
-  display: block;
-}
-
-.bg {
-  height: 100vh;
-  background: url(https://cdn.wedding.weiting.me/linemessage/blessing-bg.png) no-repeat;
-  background-size: cover;
+.button-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.button {
-  width: 486px;
-  height: 280px;
-  cursor: pointer;
-  position: absolute;
-  top: 350px;
-  left: 260px;
-  transition: all 300ms;
-  z-index: 99;
+smart-button.icon > button {
+  display: flex;
+  align-items: center;
 }
 
-  .button:hover {
-    transform: translateY(-8px);
-  }
-
-.disappear {
-  opacity: 0;
+input::placeholder {
+  color: #ccc !important;
 }
 
-.img_wrapper {
-  width: 1000px;
-  height: 620px;
+.input-form {
+  width: 550px;
+  margin: 0 auto;
+  max-width: 90%;
+  padding-top: 40px;
   position: relative;
 }
 
+  .input-form > div.button-container {
+    margin: 25px;
+  }
 
-.flower_left {
-  width: 364px;
-  height: 377px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  animation: wave1 1s linear 100ms infinite alternate;
+.input-header {
+  height: 100vh;
+  background: url(https://cdn.wedding.weiting.me/linemessage/blessing-bg.png) no-repeat;
+  background-size: cover;
+  position: relative;
 }
 
-.flower_right {
-  width: 326px;
-  height: 303px;
-  position: absolute;
-  left: 675px;
-  top: 281px;
-  animation: wave1 1.2s linear 200ms infinite alternate;
+.btn-primary {
+  color: #fff;
+  background-color: #EE7A73;
+  border: 0;
+  font-size: 16px;
+  padding: 8px 20px;
+  transition: all 300ms;
 }
 
-.gift_back {
-  width: 531px;
-  height: 351px;
-  position: absolute;
-  left: 236px;
-  top: 265px;
+  .btn-primary:disabled {
+    background-color: #EE7A73;
+    border-color: #EE7A73;
+  }
+
+.btn-primary:hover {
+  background-color: #ed6b64;
+  border-color: #ed6b64;
 }
 
-.gift_bubbles {
-  width: 428px;
-  height: 130px;
-  position: absolute;
-  left: 287px;
-  top: 375px;
-}
-
-.gift_front {
-  width: 531px;
-  height: 297px;
-  position: absolute;
-  left: 236px;
-  top: 319px;
-}
-
-.gift_top {
-  width: 533px;
-  height: 271px;
-  position: absolute;
-  left: 235px;
-  top: 120px;
-  transform-origin: center 60%;
-}
-
-.bride {
-  width: 150px;
-  height: 274px;
-  position: absolute;
-  left: 141px;
-  top: 344px;
-}
-
-.bridegroom {
-  width: 88px;
-  height: 286px;
-  position: absolute;
-  left: 727px;
-  top: 333px;
-}
-
-.bubble {
-  transform-origin: center;
-  transform: scale(0);
-}
-
-.bubble_o1-1 {
-  width: 116px;
-  height: 95px;
-  position: absolute;
-  left: 770px;
-  top: -18px;
-}
-
-.bubble_o1-2 {
-  width: 120px;
-  height: 98px;
-  position: absolute;
-  left: 70px;
-  top: 99px;
-}
-
-.bubble_p1-1 {
-  width: 95px;
-  height: 78px;
-  position: absolute;
-  left: 900px;
-  top: 183px;
-}
-
-.bubble_p1-2 {
-  width: 120px;
-  height: 98px;
-  position: absolute;
-  left: 258px;
-  top: 170px;
-}
-
-.bubble_handsome {
-  width: 292px;
-  height: 111px;
-  position: absolute;
-  left: 472px;
-  top: 96px;
-}
-
-.bubble_congrat {
-  width: 175px;
-  height: 117px;
-  position: absolute;
-  left: 223px;
-  top: 75px;
-}
-
-.bubble_beauty {
-  width: 222px;
-  height: 100px;
-  position: absolute;
-  left: 609px;
-  top: 31px;
-}
-
-.bubble_together {
-  width: 288px;
-  height: 124px;
-  position: absolute;
-  left: 365px;
-  top: 140px;
-}
-
-.popup {
-  width: 1000px;
-  height: 620px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 15px 60px -10px rgba(16,48,63,0.2);
-  color: #10303f;
-  font-size: 60px;
-  line-height: 2;
+.blessing-wrapper {
+  margin: 40px 0 0;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(0);
-  transform-origin: center;
 }
 
-
-
-
-
-/* 動畫 */
-
-.img_wrapper.animation .gift_top {
-  animation: gift_open 800ms 400ms, gift_close 600ms 5.2s, gift_shake 1.5s 6s, gift_open 800ms 7.5s;
-  animation-fill-mode: forwards;
+.blessing-bubble {
+  display: inline-block;
+  color: #fff;
+  background-color: #EE7A73;
+  padding: 12px 24px;
+  font-size: 16px;
+  line-height: 1.6;
+  border-radius: 25px;
+  position: relative;
+  margin: 20px;
 }
 
-.img_wrapper.animation .bubble_o1-1 {
-  animation: bubble_grow 250ms 1.2s cubic-bezier(.33,.18,.65,1.65), bubble_o1-1 1s 1.5s;
-  animation-fill-mode: forwards;
+  .blessing-bubble::after {
+    content: '';
+    width: 18px;
+    height: 15px;
+    background: url(https://cdn.wedding.weiting.me/linemessage/bubble-deco2.png) no-repeat;
+    background-size: cover;
+    position: absolute;
+    bottom: -14px;
+    right: 50%;
+    transform: translateX(40px);
+  }
+
+.avatar-wrapper {
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  position: relative;
 }
 
-.img_wrapper.animation .bubble_p1-2 {
-  animation: bubble_grow 250ms 1.6s cubic-bezier(.33,.18,.65,1.65), bubble_p1-2 1s 1.9s;
-  animation-fill-mode: forwards;
+.avatar-both {
+  width: 400px;
+  max-width: 100%;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
 }
 
-.img_wrapper.animation .bubble_handsome {
-  animation: bubble_grow 300ms 1.9s cubic-bezier(.33,.18,.65,1.65), bubble_handsome 1s 2.4s;
-  animation-fill-mode: forwards;
+.avatar-flower1 {
+  width: 80px;
+  max-width: 30%;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate3d(-230px,0,0);
+  animation: wave1 1s 200ms infinite alternate;
 }
 
-.img_wrapper.animation .bubble_p1-1 {
-  animation: bubble_grow 250ms 2.3s cubic-bezier(.33,.18,.65,1.65), bubble_p1-1 1s 2.6s;
-  animation-fill-mode: forwards;
+.avatar-flower2 {
+  width: 200px;
+  max-width: 50%;
+  position: absolute;
+  right: 50%;
+  bottom: -20px;
+  transform: translate3d(240px,0,0);
+  z-index: 3;
+  animation: wave2 1.5s 400ms infinite alternate;
 }
 
-.img_wrapper.animation .bubble_congrat {
-  animation: bubble_grow 250ms 2.5s cubic-bezier(.33,.18,.65,1.65), bubble_congrat 1s 2.9s;
-  animation-fill-mode: forwards;
+@media screen and (max-width: 485px) {
+  .avatar-both {
+    width: 350px;
+  }
+
+  .input-header {
+    overflow: hidden;
+  }
+
+  .avatar-flower1 {
+    width: 80px;
+    max-width: 30%;
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate3d(-175px,0,0);
+    animation: wave1m 1s 200ms infinite alternate;
+  }
+
+  .avatar-flower2 {
+    width: 170px;
+    right: 50%;
+    bottom: 35px;
+    transform: translate3d(210px,0,0);
+    animation: wave2m 1.5s 400ms infinite alternate;
+  }
 }
 
-.img_wrapper.animation .bubble_o1-2 {
-  animation: bubble_grow 250ms 3.1s cubic-bezier(.33,.18,.65,1.65), bubble_o1-2 1s 3.5s;
-  animation-fill-mode: forwards;
+@media screen and (max-width: 310px) {
+  .avatar-flower2 {
+    width: 150px;
+    right: 50%;
+    top: 40%;
+    transform: translateX(100%);
+  }
 }
-
-.img_wrapper.animation .bubble_beauty {
-  animation: bubble_grow 250ms 3.4s cubic-bezier(.33,.18,.65,1.65), bubble_beauty 1s 3.8s;
-  animation-fill-mode: forwards;
-}
-
-.img_wrapper.animation .bubble_together {
-  animation: bubble_grow 250ms 4s cubic-bezier(.33,.18,.65,1.65), bubble_together 1.2s 4.5s;
-  animation-fill-mode: forwards;
-}
-
-.img_wrapper.animation .gift_bubbles {
-  animation: gift_bubbles 3.8s 1.6s;
-  animation-fill-mode: forwards;
-}
-
-.img_wrapper.animation .popup {
-  animation: bubble_grow 600ms 7.7s cubic-bezier(.47,.05,.62,1.34);
-  animation-fill-mode: forwards;
-}
-
-
-
-
 
 @keyframes wave1 {
   0% {
-    transform: translate3d(0,0,0);
+    transform: translate3d(-230px,0,0);
   }
 
   100% {
-    transform: translate3d(0,6px,0);
+    transform: translate3d(-230px,6px,0);
   }
 }
 
-
-@keyframes gift_open {
+@keyframes wave2 {
   0% {
-    transform: translate3d(0,0,0);
+    transform: translate3d(240px,0,0);
   }
 
   100% {
-    transform: translate3d(0,-160px,0);
+    transform: translate3d(240px,6px,0);
   }
 }
 
-@keyframes bubble_grow {
+@keyframes wave1m {
   0% {
-    transform: scale(0);
+    transform: translate3d(-175px,0,0);
+    ;
   }
 
   100% {
-    transform: scale(1);
+    transform: translate3d(-175px,6px,0);
+    ;
   }
 }
 
-@keyframes bubble_o1-1 {
+@keyframes wave2m {
   0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
+    transform: translate3d(210px,0,0);
   }
 
   100% {
-    transform: translate3d(-250px,300px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_p1-2 {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(200px,120px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_handsome {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(-100px,200px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_p1-1 {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(-400px,100px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_congrat {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(200px,220px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_together {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(0,120px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_o1-2 {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(330px,160px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes bubble_beauty {
-  0% {
-    transform: translate3d(0,0,0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate3d(-200px,280px,0);
-    opacity: 0;
-  }
-}
-
-@keyframes gift_bubbles {
-  0% {
-    transform: translate3d(0,0,0);
-  }
-
-  100% {
-    transform: translate3d(0,-70px,0);
-  }
-}
-
-@keyframes gift_close {
-  0% {
-    transform: translate3d(0,-160px,0);
-  }
-
-  100% {
-    transform: translate3d(0,0,0);
-  }
-}
-
-@keyframes gift_shake {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  5% {
-    transform: rotate(-5deg);
-  }
-
-  10% {
-    transform: rotate(0deg);
-  }
-
-  15% {
-    transform: rotate(5deg);
-  }
-
-  20% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(0deg);
-  }
-
-  55% {
-    transform: rotate(-5deg);
-  }
-
-  60% {
-    transform: rotate(0deg);
-  }
-
-  65% {
-    transform: rotate(5deg);
-  }
-
-  70% {
-    transform: rotate(0deg);
-  }
-
-  75% {
-    transform: rotate(-5deg);
-  }
-
-  80% {
-    transform: rotate(0deg);
-  }
-
-  85% {
-    transform: rotate(5deg);
-  }
-
-  90% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
+    transform: translate3d(210px,6px,0);
   }
 }
