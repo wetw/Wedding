@@ -40,7 +40,6 @@ img {
   position: relative;
 }
 
-
 .flower_left {
   width: 364px;
   height: 377px;
@@ -197,12 +196,7 @@ img {
   transform-origin: center;
 }
 
-
-
-
-
 /* 動畫 */
-
 .img_wrapper.animation .gift_top {
   animation: gift_open 800ms 400ms, gift_close 600ms 5.2s, gift_shake 1.5s 6s, gift_open 800ms 7.5s;
   animation-fill-mode: forwards;
@@ -258,10 +252,6 @@ img {
   animation-fill-mode: forwards;
 }
 
-
-
-
-
 @keyframes wave1 {
   0% {
     transform: translate3d(0,0,0);
@@ -271,7 +261,6 @@ img {
     transform: translate3d(0,6px,0);
   }
 }
-
 
 @keyframes gift_open {
   0% {

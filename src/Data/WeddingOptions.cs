@@ -20,5 +20,11 @@ namespace Wedding.Data
         public string WeddingVideoSrc { get; init; }
 
         public float BulletScaling { get; init; }
+
+        public int LuckyManCount { get; init; } = 3;
+
+        public bool PushMessageToLuckyMan { get; init; }
+
+        public string RandomKey { get; init; } = "123456";
     }
 }

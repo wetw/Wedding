@@ -1,0 +1,53 @@
+@page "/Drawing"
+
+<PageTitle>幸運抽獎</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="bg">
+            <div class="img_wrapper @_animationStartClass">
+                <img class="button @_buttonStartClass" src="images/luckyDraw/start-button.png" @onclick="StartDrawing">
+                <img class="flower_left" src="images/luckyDraw/flower1.png">
+                <img class="flower_right" src="images/luckyDraw/flower2.png">
+                <img class="gift_back" src="images/luckyDraw/gift-back.png">
+                <img class="gift_bubbles" src="images/luckyDraw/gift-bubbles.png">
+                <img class="gift_front" src="images/luckyDraw/gift-front.png">
+                <img class="gift_top" src="images/luckyDraw/gift-top.png">
+                <img class="bride" src="images/luckyDraw/bride.png">
+                <img class="bridegroom" src="images/luckyDraw/bridegroom.png">
+
+                <img class="bubble bubble_o1-1" src="images/luckyDraw/bubble-o1.png">
+                <img class="bubble bubble_o1-2" src="images/luckyDraw/bubble-o1.png">
+                <img class="bubble bubble_p1-1" src="images/luckyDraw/bubble-p1.png">
+                <img class="bubble bubble_p1-2" src="images/luckyDraw/bubble-p1.png">
+                <img class="bubble bubble_handsome" src="images/luckyDraw/bubble-o2.png">
+                <img class="bubble bubble_congrat" src="images/luckyDraw/bubble-p2.png">
+                <img class="bubble bubble_beauty" src="images/luckyDraw/bubble-p3.png">
+                <img class="bubble bubble_together" src="images/luckyDraw/bubble-o3.png">
+
+                <div class="popup">
+                    <table>
+                        @foreach (var (_, value) in _luckyMans)
+                        {
+                            <tr>
+                                <td>
+                                    <img style="width: 100px; height: 100px; border-radius: 50%; background-position: top center;" src="@value.Avatar" />
+                                </td>
+                                <td>
+                                    @value.Name
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<style>
+    td {
+        padding: 0 20px;
+        text-align: left;
+    }
+</style>
