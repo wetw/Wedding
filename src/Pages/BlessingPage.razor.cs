@@ -73,7 +73,8 @@ namespace Wedding.Pages
                 var blessing = new Blessing
                 {
                     LineId = _customer.LineId,
-                    Message = _messageInput
+                    Message = _messageInput,
+                    Name = string.IsNullOrWhiteSpace(_customer.RealName) ? _customer.Name : _customer.RealName
                 };
                 await BlessingDao.AddAsync(blessing).ConfigureAwait(false);
                 _blessingTotalCount++;

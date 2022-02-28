@@ -50,12 +50,17 @@ namespace Wedding.Pages
         {
             _buttonStartClass = "disappear";
             _animationStartClass = "animation";
+            if (_luckyMans.Any())
+            {
+                return;
+            }
+
             await GetLuckyMans().ConfigureAwait(false);
         }
 
         private async Task GetLuckyMans()
         {
-            var list = await BlessingDao.GetListAsync().ConfigureAwait(false);
+            var list = await BlessingDao.GetListAsync(pageSize: 0).ConfigureAwait(false);
             var rnd = new Random(int.TryParse(Options.CurrentValue.RandomKey, out var key) ? key : new Random().Next());
             var maxLuckyManCount = list.GroupBy(x => x.LineId).Count();
             while (_luckyMans.Count < Math.Min(Options.CurrentValue.LuckyManCount, maxLuckyManCount))
