@@ -177,11 +177,12 @@ img {
 }
 
 .popup {
+  padding: 40px;
   width: 1000px;
-  height: 620px;
+  min-height: 620px;
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 15px 60px -10px rgba(16,48,63,0.2);
@@ -192,8 +193,8 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: scale(0);
-  transform-origin: center;
+  transform: scale(0) translate3d(-50%, -50%, 0);
+  transform-origin: left top;
 }
 
 /* 動畫 */
@@ -248,7 +249,7 @@ img {
 }
 
 .img_wrapper.animation .popup {
-  animation: bubble_grow 600ms 7.7s cubic-bezier(.47,.05,.62,1.34);
+  animation: popup_grow 600ms 7.7s cubic-bezier(.47,.05,.62,1.34);
   animation-fill-mode: forwards;
 }
 
@@ -269,6 +270,16 @@ img {
 
   100% {
     transform: translate3d(0,-160px,0);
+  }
+}
+
+@keyframes popup_grow {
+  0% {
+    transform: scale(0) translate3d(-50%, -50%, 0);
+  }
+
+  100% {
+    transform: scale(1) translate3d(-50%, -50%, 0);
   }
 }
 
