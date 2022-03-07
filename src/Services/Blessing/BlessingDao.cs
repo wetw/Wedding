@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using SqlSugar;
@@ -29,17 +31,24 @@ namespace Wedding.Services
 
         public Task<Blessing> GetAsync(int id) => GetAsync(x => x.Id == id);
 
-        public async Task<IEnumerable<Blessing>> GetListAsync(string lineId = null, int pageIndex = 1, int pageSize = 10)
+        public async Task<IEnumerable<Blessing>> GetListAsync(
+            string lineId = null,
+            int pageIndex = 1,
+            int pageSize = 10,
+            Expression<Func<Blessing, object>> orderBy = null,
+            OrderByType orderByType = OrderByType.Asc)
         {
             if (pageIndex < 1)
             {
                 pageIndex = 1;
             }
-            RefAsync<int> total = 0;
             var blessingQueryable = _db.Queryable<Blessing>()
-                .Where(x => string.IsNullOrWhiteSpace(lineId) || x.LineId == lineId)
-                .OrderBy(x => x.CreationTime, OrderByType.Desc);
-
+                .Where(x => string.IsNullOrWhiteSpace(lineId) || x.LineId == lineId);
+            if (orderBy is not null)
+            {
+                blessingQueryable = blessingQueryable.OrderBy(orderBy, orderByType);
+            }
+            RefAsync<int> total = 0;
             return pageSize == 0
                 ? await blessingQueryable.ToListAsync().ConfigureAwait(false)
                 : await blessingQueryable.ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
