@@ -33,7 +33,7 @@ namespace Wedding.Pages
             _videoSrc = Options.CurrentValue.WeddingVideoSrc;
             _scaling = Options.CurrentValue.BulletScaling;
             _timer = new Timer(Options.CurrentValue.PhotoBlessingScannerTime);
-            _timer.Elapsed += CountDownTimer;
+            _timer.Elapsed += ShowBlessing;
             _timer.Enabled = true;
             _timer.Start();
         }
@@ -68,7 +68,7 @@ namespace Wedding.Pages
             await JS.InvokeVoidAsync("SetBulletScreen", _scaling).ConfigureAwait(false);
         }
 
-        private void CountDownTimer(object source, ElapsedEventArgs e)
+        private void ShowBlessing(object source, ElapsedEventArgs e)
         {
             _ = InvokeAsync(async () =>
             {
@@ -77,8 +77,7 @@ namespace Wedding.Pages
                 {
                     if (_oldBlessings is null || !_oldBlessings.Any())
                     {
-                        var blessings = (await BlessingDao.GetListAsync(pageSize: 0).ConfigureAwait(false)).ToList();
-                        _oldBlessings = new Queue<Blessing>(blessings.GetRandomSelection(blessings.Count));
+                        _oldBlessings = new Queue<Blessing>(await BlessingDao.GetListAsync(pageSize: 0, orderBy:x=>x.CreationTime).ConfigureAwait(false));
                     }
 
                     var blessing = _blessings.Any() ? _blessings.Dequeue() : _oldBlessings.Dequeue();
