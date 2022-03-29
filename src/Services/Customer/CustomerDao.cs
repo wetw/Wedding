@@ -20,7 +20,7 @@ namespace Wedding.Services
 
         public Task<Customer> GetByLineIdAsync(string lineId)
         {
-            return _db.Queryable<Customer>().FirstAsync(x => x.LineId == lineId);
+            return Db.Queryable<Customer>().FirstAsync(x => x.LineId == lineId);
         }
 
         public new Task<Customer> AddAsync(Customer customer)
@@ -32,7 +32,7 @@ namespace Wedding.Services
         public Task<Customer> UpdateAsync(Customer customer, string lineId)
         {
             customer.LastModifyTime = System.DateTime.UtcNow;
-            _db.Updateable(customer).ExecuteCommandAsync();
+            Db.Updateable(customer).ExecuteCommandAsync();
             return GetByLineIdAsync(lineId);
         }
 
@@ -44,8 +44,8 @@ namespace Wedding.Services
                 pageIndex = 1;
             }
             return pageSize < 1
-                ? await _db.Queryable<Customer>().ToListAsync().ConfigureAwait(false)
-                : await _db.Queryable<Customer>().ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
+                ? await Db.Queryable<Customer>().ToListAsync().ConfigureAwait(false)
+                : await Db.Queryable<Customer>().ToPageListAsync(pageIndex, pageSize, total).ConfigureAwait(false);
         }
 
         public ItemsDTO<Customer> GetGridRowsAsync(
