@@ -25,13 +25,13 @@ namespace Wedding.Services
 
         public new Task<Customer> AddAsync(Customer customer)
         {
-            customer.CreationTime = customer.LastModifyTime = System.DateTime.UtcNow;
+            customer.CreationTime = customer.LastModifyTime = DateTime.UtcNow;
             return base.AddAsync(customer);
         }
 
         public Task<Customer> UpdateAsync(Customer customer, string lineId)
         {
-            customer.LastModifyTime = System.DateTime.UtcNow;
+            customer.LastModifyTime = DateTime.UtcNow;
             Db.Updateable(customer).ExecuteCommandAsync();
             return GetByLineIdAsync(lineId);
         }
