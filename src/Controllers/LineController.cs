@@ -44,10 +44,16 @@ namespace Wedding.Controllers
             {
                 var customer = User.ToCustomer();
                 _logger.LogInformation($"{customer.Name} Login success.");
-                if (!string.IsNullOrWhiteSpace(customer?.LineId)
-                    && await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) is null)
+                if (!string.IsNullOrWhiteSpace(customer?.LineId))
                 {
-                    await _customerDao.AddAsync(customer).ConfigureAwait(false);
+                    if (await _customerDao.GetByLineIdAsync(customer.LineId).ConfigureAwait(false) is null)
+                    {
+                        await _customerDao.AddAsync(customer).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await _customerDao.UpdateAsync(customer, customer.LineId).ConfigureAwait(false);
+                    }
                 }
             }
             catch (DbException e)
