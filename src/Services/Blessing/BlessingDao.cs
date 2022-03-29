@@ -23,7 +23,7 @@ namespace Wedding.Services
         public async Task<int> CountAsync(string lineId)
         {
             RefAsync<int> total = 0;
-            _ = await _db.Queryable<Blessing>()
+            _ = await Db.Queryable<Blessing>()
                 .Where(x => x.LineId == lineId)
                 .ToPageListAsync(1, 1, total).ConfigureAwait(false);
             return total.Value;
@@ -42,7 +42,7 @@ namespace Wedding.Services
             {
                 pageIndex = 1;
             }
-            var blessingQueryable = _db.Queryable<Blessing>()
+            var blessingQueryable = Db.Queryable<Blessing>()
                 .Where(x => string.IsNullOrWhiteSpace(lineId) || x.LineId == lineId);
             if (orderBy is not null)
             {
