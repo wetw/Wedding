@@ -19,7 +19,7 @@
     <PackageReference Include="FluentValidation" Version="9.5.4" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.5.4" />
     <PackageReference Include="FuzzyString.NETStandard" Version="1.0.0" />
-    <PackageReference Include="GridBlazor" Version="3.2.4" />
+    <PackageReference Include="GridBlazor" Version="3.2.5" />
     <PackageReference Include="GridCore" Version="5.2.3" />
     <PackageReference Include="LineDC.Liff" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
